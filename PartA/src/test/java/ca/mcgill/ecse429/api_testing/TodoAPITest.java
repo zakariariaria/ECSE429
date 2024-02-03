@@ -26,27 +26,26 @@ public class TodoAPITest {
             assertThat().
             statusCode(200);
     }
-    @Test
-    public void test2() {
-    	int test = 5;
-    	assertEquals(5,test);
-    }
-    @Test
-    public void test3() {
-    	int test = 5;
-    	assertEquals(5,test);
-    }
-    @Test
-    public void test4() {
-    	int test = 5;
-    	assertEquals(5,test);
-    }
-    @Test
-    public void test5() {
-    	int test = 5;
-    	assertEquals(5,test);
-    }
+
+
     
+    //Project Tests
+    @Test
+    public void test_get_projects()
+    {
+
+        RestAssured.baseURI = "http://localhost:4567";
+
+        given().
+        when().
+            get("/projects").
+        then().
+            assertThat().
+            statusCode(200);
+
+    }
+
+
     
     
 }
