@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="ca.mcgill.ecse429.api_testing.TodoAPITest" time="1.892" tests="2" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="ca.mcgill.ecse429.api_testing.TodoAPITest" time="0.047" tests="2" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="CA"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-21\bin"/>
-    <property name="sun.java.command" value="C:\Users\Menad Kessaci\AppData\Local\Temp\surefire17504499617721454600\surefirebooter-20240203183825977_3.jar C:\Users\Menad Kessaci\AppData\Local\Temp\surefire17504499617721454600 2024-02-03T18-38-25_574-jvmRun1 surefire-20240203183825977_1tmp surefire_0-20240203183825977_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\Menad Kessaci\AppData\Local\Temp\surefire12792911116891314035\surefirebooter-20240203192355234_3.jar C:\Users\Menad Kessaci\AppData\Local\Temp\surefire12792911116891314035 2024-02-03T19-23-54_860-jvmRun1 surefire-20240203192355234_1tmp surefire_0-20240203192355234_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\Menad Kessaci\OneDrive - McGill University\Winter 2024\ECSE 429 - Software Validation\Project - Part A\ECSE429\PartA\target\test-classes;C:\Users\Menad Kessaci\OneDrive - McGill University\Winter 2024\ECSE 429 - Software Validation\Project - Part A\ECSE429\PartA\target\classes;C:\Users\Menad Kessaci\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.7.0\junit-jupiter-api-5.7.0.jar;C:\Users\Menad Kessaci\.m2\repository\org\apiguardian\apiguardian-api\1.1.0\apiguardian-api-1.1.0.jar;C:\Users\Menad Kessaci\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\Menad Kessaci\.m2\repository\org\junit\platform\junit-platform-commons\1.7.0\junit-platform-commons-1.7.0.jar;C:\Users\Menad Kessaci\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.7.0\junit-jupiter-engine-5.7.0.jar;C:\Users\Menad Kessaci\.m2\repository\org\junit\platform\junit-platform-engine\1.7.0\junit-platform-engine-1.7.0.jar;C:\Users\Menad Kessaci\.m2\repository\org\junit\platform\junit-platform-launcher\1.7.0\junit-platform-launcher-1.7.0.jar;C:\Users\Menad Kessaci\.m2\repository\io\rest-assured\rest-assured\4.3.3\rest-assured-4.3.3.jar;C:\Users\Menad Kessaci\.m2\repository\org\codehaus\groovy\groovy\3.0.7\groovy-3.0.7.jar;C:\Users\Menad Kessaci\.m2\repository\org\codehaus\groovy\groovy-xml\3.0.7\groovy-xml-3.0.7.jar;C:\Users\Menad Kessaci\.m2\repository\org\apache\httpcomponents\httpclient\4.5.3\httpclient-4.5.3.jar;C:\Users\Menad Kessaci\.m2\repository\org\apache\httpcomponents\httpcore\4.4.6\httpcore-4.4.6.jar;C:\Users\Menad Kessaci\.m2\repository\commons-logging\commons-logging\1.2\commons-logging-1.2.jar;C:\Users\Menad Kessaci\.m2\repository\commons-codec\commons-codec\1.9\commons-codec-1.9.jar;C:\Users\Menad Kessaci\.m2\repository\org\apache\httpcomponents\httpmime\4.5.3\httpmime-4.5.3.jar;C:\Users\Menad Kessaci\.m2\repository\org\hamcrest\hamcrest\2.1\hamcrest-2.1.jar;C:\Users\Menad Kessaci\.m2\repository\org\ccil\cowan\tagsoup\tagsoup\1.2.1\tagsoup-1.2.1.jar;C:\Users\Menad Kessaci\.m2\repository\io\rest-assured\json-path\4.3.3\json-path-4.3.3.jar;C:\Users\Menad Kessaci\.m2\repository\org\codehaus\groovy\groovy-json\3.0.7\groovy-json-3.0.7.jar;C:\Users\Menad Kessaci\.m2\repository\io\rest-assured\rest-assured-common\4.3.3\rest-assured-common-4.3.3.jar;C:\Users\Menad Kessaci\.m2\repository\io\rest-assured\xml-path\4.3.3\xml-path-4.3.3.jar;C:\Users\Menad Kessaci\.m2\repository\org\apache\commons\commons-lang3\3.11\commons-lang3-3.11.jar;C:\Users\Menad Kessaci\.m2\repository\jakarta\xml\bind\jakarta.xml.bind-api\2.3.3\jakarta.xml.bind-api-2.3.3.jar;C:\Users\Menad Kessaci\.m2\repository\jakarta\activation\jakarta.activation-api\1.2.2\jakarta.activation-api-1.2.2.jar;C:\Users\Menad Kessaci\.m2\repository\com\sun\xml\bind\jaxb-impl\2.3.3\jaxb-impl-2.3.3.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\Menad Kessaci\AppData\Local\Temp\surefire17504499617721454600\surefirebooter-20240203183825977_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Menad Kessaci\AppData\Local\Temp\surefire12792911116891314035\surefirebooter-20240203192355234_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.2+13-LTS-58"/>
@@ -58,6 +58,6 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="test_get_projects" classname="ca.mcgill.ecse429.api_testing.TodoAPITest" time="1.859"/>
-  <testcase name="testGetTodos" classname="ca.mcgill.ecse429.api_testing.TodoAPITest" time="0.012"/>
+  <testcase name="test_get_projects" classname="ca.mcgill.ecse429.api_testing.TodoAPITest" time="0.016"/>
+  <testcase name="testGetTodos" classname="ca.mcgill.ecse429.api_testing.TodoAPITest" time="0.016"/>
 </testsuite>
