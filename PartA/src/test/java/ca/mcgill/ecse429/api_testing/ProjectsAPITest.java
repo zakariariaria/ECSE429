@@ -22,7 +22,7 @@ public class ProjectsAPITest {
     public void testCreateProjectJson() {
         given()
             .contentType("application/json")
-            .body("{\"title\":\"sometitle\",\"completed\":true,\"active\":false,\"description\":\"some description\"}")
+            .body("{\"title\":\"sometitle\",\"completed\":true,\"active\":false,\"description\":\"qwertyuiop\"}")
         .when()
             .post(urlProject)
         .then()
@@ -30,14 +30,14 @@ public class ProjectsAPITest {
             .body("title", equalTo("sometitle"))
             .body("completed", equalTo(true))
             .body("active", equalTo(false))
-            .body("description", equalTo("some description"));
+            .body("description", equalTo("qwertyuiop"));
     }
 
     @Test
     public void testCreateProjectBoolAsString() {
         given()
             .contentType("application/json")
-            .body("{\"title\":\"sometitle\",\"completed\":\"True\",\"active\":\"False\",\"description\":\"some description\"}")
+            .body("{\"title\":\"sometitle\",\"completed\":\"True\",\"active\":\"False\",\"description\":\"qwertyuiop\"}")
         .when()
             .post(urlProject)
         .then()
@@ -45,44 +45,44 @@ public class ProjectsAPITest {
             .body("title", equalTo("sometitle"))
             .body("completed", equalTo(true))
             .body("active", equalTo(false))
-            .body("description", equalTo("some description"));
+            .body("description", equalTo("qwertyuiop"));
     }
 
     @Test
     public void testCreateProjectXml() {
         given()
             .contentType("application/xml")
-            .body("<project>\n  <active>true</active>\n  <description>t enim ad minim veni</description>\n  <id>1</id>\n  <completed>true</completed>\n  <title>incididunt ut labora</title>\n</project>")
+            .body("<project>\n  <active>true</active>\n  <description>qwertyuiop</description>\n  <id>1</id>\n  <completed>true</completed>\n  <title>qwertyuiop</title>\n</project>")
         .when()
             .post(urlProject)
         .then()
             .statusCode(200)
-            .body("title", equalTo("incididunt ut labora"))
+            .body("title", equalTo("qwertyuiop"))
             .body("completed", equalTo(true))
             .body("active", equalTo(true))
-            .body("description", equalTo("t enim ad minim veni"));
+            .body("description", equalTo("qwertyuiop"));
     }
 
     @Test
     public void testCreateProjectXmlInvalidId() {
         given()
             .contentType("application/xml")
-            .body("<project>\n  <active>true</active>\n  <description>t enim ad minim veni</description>\n  <id>100</id>\n  <completed>true</completed>\n  <title>incididunt ut labora</title>\n</project>")
+            .body("<project>\n  <active>true</active>\n  <description>qwertyuiop</description>\n  <id>100</id>\n  <completed>true</completed>\n  <title>qwertyuiop</title>\n</project>")
         .when()
             .post(urlProject)
         .then()
-            .statusCode(400); // Adjust the expected status code as needed
+            .statusCode(400);
     }
 
     @Test
     public void testCreateProjectXmlNullId() {
         given()
             .contentType("application/xml")
-            .body("<project>\n  <active>true</active>\n  <description>t enim ad minim veni</description>\n  <id>null</id>\n  <completed>true</completed>\n  <title>incididunt ut labora</title>\n</project>")
+            .body("<project>\n  <active>true</active>\n  <description>qwertyuiop</description>\n  <id>null</id>\n  <completed>true</completed>\n  <title>qwertyuiop</title>\n</project>")
         .when()
             .post(urlProject)
         .then()
-            .statusCode(400); // Adjust the expected status code as needed
+            .statusCode(400);
     }
     
     //Edge Cases
@@ -310,7 +310,7 @@ public class ProjectsAPITest {
     public void testPostProjectId() {
         given()
             .headers("Content-Type", "application/json")
-            .body("{ \"title\":\"new title\",\"completed\":true,\"active\":false,\"description\":\"some description\" }")
+            .body("{ \"title\":\"new title\",\"completed\":true,\"active\":false,\"description\":\"qwertyuiop\" }")
         .when()
             .post(urlProject + "/1")
         .then()
@@ -322,7 +322,7 @@ public class ProjectsAPITest {
     public void testPostProjectIdNotExist() {
         given()
             .headers("Content-Type", "application/json")
-            .body("{ \"title\":\"sometitle\",\"completed\":true,\"active\":false,\"description\":\"some description\" }")
+            .body("{ \"title\":\"sometitle\",\"completed\":true,\"active\":false,\"description\":\"qwertyuiop\" }")
         .when()
             .post(urlProject + "/100")
         .then()
@@ -337,27 +337,27 @@ public class ProjectsAPITest {
             .post(urlProject + "/1")
         .then()
             .statusCode(200)
-            .body(containsString("Office Work"));
+            .body(containsString("qwertyuiop"));
     }
 
     @Test
     public void testPostProjectNoBodyFieldJsonNullEntry() {
         given()
             .headers("Content-Type", "application/json")
-            .body("{ \"title\":null,\"completed\":true,\"active\":false,\"description\":\"some description\" }")
+            .body("{ \"title\":null,\"completed\":true,\"active\":false,\"description\":\"qwertyuiop\" }")
         .when()
             .post(urlProject + "/1")
         .then()
             .statusCode(200)
             .body(containsString("Office Work"))
-            .body(containsString("some description"));
+            .body(containsString("qwertyuiop"));
     }
 
     @Test
     public void testPutProjectId() {
         given()
             .headers("Content-Type", "application/json")
-            .body("{ \"title\":\"new title\",\"completed\":true,\"active\":false,\"description\":\"some description\" }")
+            .body("{ \"title\":\"new title\",\"completed\":true,\"active\":false,\"description\":\"qwertyuiop\" }")
         .when()
             .put(urlProject + "/1")
         .then()
@@ -369,7 +369,7 @@ public class ProjectsAPITest {
     public void testPutProjectIdNotExist() {
         given()
             .headers("Content-Type", "application/json")
-            .body("{ \"title\":\"sometitle\",\"completed\":true,\"active\":false,\"description\":\"some description\" }")
+            .body("{ \"title\":\"sometitle\",\"completed\":true,\"active\":false,\"description\":\"qwertyuiop\" }")
         .when()
             .put(urlProject + "/100")
         .then()
@@ -392,13 +392,13 @@ public class ProjectsAPITest {
     public void testPutProjectNoBodyFieldNullEntry() {
         given()
             .headers("Content-Type", "application/json")
-            .body("{ \"title\":null,\"completed\":true,\"active\":false,\"description\":\"some description\" }")
+            .body("{ \"title\":null,\"completed\":true,\"active\":false,\"description\":\"qwertyuiop\" }")
         .when()
             .put(urlProject + "/1")
         .then()
             .statusCode(200)
             .body("title", equalTo(""))
-            .body("description", equalTo("some description"));
+            .body("description", equalTo("qwertyuiop"));
     }
 
     @Test
@@ -473,7 +473,7 @@ public class ProjectsAPITest {
     public void testPostProjectIdNotExistXML() {
         given()
             .headers("Content-Type", "application/xml")
-            .body("<project>\n  <active>true</active>\n  <description>t enim ad minim veni</description>\n  <id>100</id>\n  <completed>true</completed>\n  <title>incididunt ut labora</title>\n</project>")
+            .body("<project>\n  <active>true</active>\n  <description>qwertyuiop</description>\n  <id>100</id>\n  <completed>true</completed>\n  <title>qwertyuiop</title>\n</project>")
         .when()
             .post(urlProject + "/100")
         .then()
@@ -494,7 +494,7 @@ public class ProjectsAPITest {
     public void testPutProject() {
         given()
             .headers("Content-Type", "application/xml")
-            .body("<project>\n  <active>true</active>\n  <description>t enim ad minim veni</description>\n  <id>1</id>\n  <completed>true</completed>\n  <title>incididunt ut labora</title>\n</project>")
+            .body("<project>\n  <active>true</active>\n  <description>qwertyuiop</description>\n  <id>1</id>\n  <completed>true</completed>\n  <title>qwertyuiop</title>\n</project>")
         .when()
             .put(urlProject + "/1")
         .then()
@@ -505,7 +505,7 @@ public class ProjectsAPITest {
     public void testPostProjectTaskXML() {
         given()
             .headers("Content-Type", "application/xml")
-            .body("<project>\n  <active>true</active>\n  <description>t enim ad minim veni</description>\n  <id>1</id>\n  <completed>true</completed>\n  <title>incididunt ut labora</title>\n</project>")
+            .body("<project>\n  <active>true</active>\n  <description>qwertyuiop</description>\n  <id>1</id>\n  <completed>true</completed>\n  <title>qwertyuiop</title>\n</project>")
         .when()
             .post(urlProject + "/1/tasks")
         .then()
@@ -516,7 +516,7 @@ public class ProjectsAPITest {
     public void testPostProjectCategoriesXML() {
         given()
             .headers("Content-Type", "application/xml")
-            .body("<project>\n  <active>true</active>\n  <description>t enim ad minim veni</description>\n  <id>1</id>\n  <completed>true</completed>\n  <title>incididunt ut labora</title>\n</project>")
+            .body("<project>\n  <active>true</active>\n  <description>qwertyuiop</description>\n  <id>1</id>\n  <completed>true</completed>\n  <title>qwertyuiop</title>\n</project>")
         .when()
             .post(urlProject + "/1/categories")
         .then()
