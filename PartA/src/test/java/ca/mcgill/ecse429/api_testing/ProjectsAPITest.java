@@ -30,17 +30,191 @@ public class ProjectsAPITest {
     }
 
     @Test
-    public void testCreateProject() {
+    public void testPutNotAllowed() {
 
         RestAssured.baseURI = "http://localhost:4567";
 
-        // Send a POST request to /projects with appropriate payload
-        String requestBody = "{ \"name\": \"Test Project\", \"description\": \"Test Description\" }";
-        //Response response = given().contentType("application/json").body(requestBody).post("/projects");
-
-        // Validate the response code and content
-        //assertEquals(201, response.getStatusCode());
-        //assertTrue(response.getBody().asString().contains("Created a project"));
+        given().
+        when().
+            get("/projects").
+        then().
+            assertThat().
+            statusCode(200);
     }
 
+    @Test
+    public void testPost201() {
+
+        RestAssured.baseURI = "http://localhost:4567";
+
+        given().
+        when().
+            get("/projects").
+        then().
+            assertThat().
+            statusCode(200);
+    }
+
+    @Test
+    public void testPost400() {
+
+        RestAssured.baseURI = "http://localhost:4567";
+
+        given().
+        when().
+            get("/projects").
+        then().
+            assertThat().
+            statusCode(200);
+    }
+
+    @Test
+    public void testDeleteNotAllowed() {
+
+        RestAssured.baseURI = "http://localhost:4567";
+
+        given().
+        when().
+            get("/projects").
+        then().
+            assertThat().
+            statusCode(200);
+    }
+
+    //Test no options to show unava...
+    @Test
+    public void testShowAllOptions200() {
+
+        RestAssured.baseURI = "http://localhost:4567";
+
+        given().
+        when().
+            get("/projects").
+        then().
+            assertThat().
+            statusCode(200);
+    }
+
+    @Test
+    public void testReturnHeaders200() {
+
+        RestAssured.baseURI = "http://localhost:4567";
+
+        given().
+        when().
+            get("/projects").
+        then().
+            assertThat().
+            statusCode(200);
+    }
+
+    @Test
+    public void testPatchNotAllowed405() {
+
+        RestAssured.baseURI = "http://localhost:4567";
+
+        given().
+        when().
+            get("/projects").
+        then().
+            assertThat().
+            statusCode(200);
+    }
+
+    //"Project/:id"
+
+    //Get
+
+    //Put
+
+    //Post
+
+    //Delete
+
+    //Options
+
+    //Head
+
+    //Patch
+
+
+
+
+    //"Project/:id/categories"
+
+    //Get
+
+    //Put
+
+    //Post
+
+    //Delete
+
+    //Options
+
+    //Head
+
+    //Patch
+
+
+
+
+    //"/projects/:id/categories/:id"
+
+    //Get
+
+    //Put
+
+    //Post
+
+    //Delete
+
+    //Options
+
+    //Head
+
+    //Patch
+
+
+
+
+
+
+    //"/projects/:id/tasks"
+
+    //Get
+
+    //Put
+
+    //Post
+
+    //Delete
+
+    //Options
+
+    //Head
+
+    //Patch
+
+
+
+
+
+
+
+    //"/projects/:id/tasks/:id"
+
+    //Get
+
+    //Put
+
+    //Post
+
+    //Delete
+
+    //Options
+
+    //Head
+
+    //Patch
 }
