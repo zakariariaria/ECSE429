@@ -733,5 +733,90 @@ public class TodoAPITest {
 
 	    assertEquals(400, responseUpdate.getStatusCode());
 	}
+	
+	@Test
+	public void testDeleteIDAlreadyDeletedTodosJSON() throws Exception{
+		String title = "placeholder";
+		boolean doneStatus = false;
+		String description = "";
+		
+		JSONObject object = new JSONObject();
+		object.put("title",title);
+		object.put("doneStatus", doneStatus);
+		object.put("description", description);
+		
+		Response responsePost = given()
+							.contentType(ContentType.JSON)
+							.body(object.toJSONString())
+							.when()
+							.post("http://localhost:4567/todos");
+		
+		assertEquals(201,responsePost.getStatusCode());
+		
+		JsonPath jsonResponse = responsePost.jsonPath();
+		String todoID = jsonResponse.get("id");
+		
+		
+		Response responseDelete = given()
+				.when()
+				.delete("http://localhost:4567/todos/"+todoID);
+		
+		assertEquals(200,responseDelete.getStatusCode());
+		
+		Response responseGet = given()
+                .when()
+                .delete("http://localhost:4567/todos/"+todoID)
+                .then()
+                .extract()
+                .response();
+		
+		String jsonError = "\"errorMessages\":[\"Could not find any instances with todos/" + todoID + "\"]}";
+		String validJsonError = "{" + jsonError;
+
+		assertEquals(validJsonError, responseGet.getBody().asString());
+		assertEquals(404, responseGet.getStatusCode());
+	}
+	
+	@Test
+	public void testDeleteIDAlreadyDeletedTodosXML() throws Exception {
+	    
+	    String title = "placeholder";
+	    JSONObject object = new JSONObject();
+	    object.put("title", title);
+	    object.put("doneStatus", false);
+	    object.put("description", "");
+
+	    Response responsePost = given()
+	        .contentType(ContentType.JSON)
+	        .body(object.toJSONString())
+	        .when()
+	        .post("http://localhost:4567/todos");
+
+	    assertEquals(201, responsePost.getStatusCode());
+
+	    JsonPath jsonResponse = responsePost.jsonPath();
+	    String todoID = jsonResponse.get("id");
+
+	   
+	    Response responseDelete = given()
+	        .when()
+	        .delete("http://localhost:4567/todos/" + todoID);
+
+	    assertEquals(200, responseDelete.getStatusCode());
+
+	    
+	    Response responseGet = given()
+	        .header("Accept", ContentType.XML)
+	        .when()
+	        .delete("http://localhost:4567/todos/" + todoID)
+	        .then()
+	        .extract()
+	        .response();
+
+	    
+
+	    assertEquals("Could not find any instances with todos/"+todoID, responseGet.getBody().xmlPath().get().toString());
+	    assertEquals(404, responseGet.getStatusCode());
+	}
 	  
 }
