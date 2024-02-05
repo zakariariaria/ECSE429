@@ -161,7 +161,7 @@ public class TodoAPITest {
 		
 		JsonPath jsonResponse = response.jsonPath();
 		assertEquals(title,jsonResponse.get("title"));
-		assertEquals(doneStatus,Boolean.parseBoolean(jsonResponse.get("doneStatus")));
+		assertEquals(doneStatus,Boolean.parseBoolean(jsonResponse.get("doneStatus").toString()));
 		assertEquals(description,jsonResponse.get("description"));
 	}
 	
