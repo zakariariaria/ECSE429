@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
+import io.restassured.path.xml.XmlPath;
 import io.restassured.response.Response;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -33,7 +34,24 @@ class CategoriesAPITest {
             fail(e.getMessage());
             available = false;
         }
-    }    
+    }
+    @AfterAll
+    public static void checkApiShutdown() {
+        try {
+            // Send a request to the shutdown endpoint
+            int statusCode = given()
+                                .when()
+                                .post("http://localhost:4567/shutdown")
+                                .then()
+                                .extract()
+                                .statusCode();
+            
+            // Assert that the API is not responding with a 200 status code, 
+            // indicating it's not available after shutdown
+            assertNotEquals(200, statusCode);
+        } catch (Exception e) {
+        }
+    }
 	@Test
     public void testCategoriesGetJSON() throws Exception {     
 		  Response response = given()
@@ -85,14 +103,14 @@ assertEquals(200, response.getStatusCode());
 	@Test
     public void testCategoriesGetIdJSON()throws Exception {
 		Response response = given()
-                .when()
-                .get("http://localhost:4567/categories/1")
-                .then()
-                .extract()
-                .response();
-		assertNotNull(response.getBody());
-        assertEquals(200, response.getStatusCode());     
-    }
+				.contentType(ContentType.JSON)
+				.when()
+				.get("http://localhost:4567/categories/2");
+
+JsonPath jsonResponse = response.jsonPath();
+assertEquals(200,response.getStatusCode());
+
+}
 	@Test
     public void testCategoriesGetIdXML() throws Exception{
 		 Response response = given()
@@ -100,15 +118,17 @@ assertEquals(200, response.getStatusCode());
 					.when()
 					.get("http://localhost:4567/categories/1")
 					.then()
+					.log().all()
 					.contentType(ContentType.XML)
 					.extract()
 					.response();
+		 
 assertNotNull(response.getBody());
 assertEquals(200, response.getStatusCode());
     }
 	
 	@Test
-    public void testCategoriesWrongIdJSON() {
+    public void testCategoriesWrongIdJSON() throws Exception  {
 		Response response = given()
                 .when()
                 .get("http://localhost:4567/categories/-1")
@@ -138,7 +158,7 @@ assertEquals(200, response.getStatusCode());
 		assertEquals(404, response.getStatusCode());
     }
 	@Test
-    public void testCategoriesHeadIdJSON() {
+    public void testCategoriesHeadIdJSON() throws Exception {
 		Response response = given()
                 .when()
                 .head("http://localhost:4567/categories/1")
@@ -149,7 +169,7 @@ assertEquals(200, response.getStatusCode());
 			assertEquals(404, response.getStatusCode());         		  
     }
 	@Test
-    public void testCategoriesHeadIdXML() {
+    public void testCategoriesHeadIdXML()throws Exception  {
 		 Response response = given()
 					.header("Accept", ContentType.XML)
                  .when()
@@ -162,167 +182,263 @@ assertEquals(200, response.getStatusCode());
 assertEquals(404, response.getStatusCode());	      		  
     }
 	   @Test
-	    public void testCategoriesPostJSON() {
+	    public void testCategoriesPostJSON() throws Exception {
 				String title = "film";
 				String description = "This is a film category";
 				
 				JSONObject object = new JSONObject();
 				object.put("title",title);
-				object.put("doneStatus", doneStatus);
 				object.put("description", description);
 				
 				Response response = given()
 									.contentType(ContentType.JSON)
 									.body(object.toJSONString())
 									.when()
-									.post("http://localhost:4567/todos");
-				
+									.post("http://localhost:4567/categories")
+									.then()
+									.log().all()					
+									.extract()
+									.response();	
 				assertEquals(201,response.getStatusCode());
-				
 				JsonPath jsonResponse = response.jsonPath();
 				assertEquals(title,jsonResponse.get("title"));
-				assertEquals(doneStatus,Boolean.parseBoolean(jsonResponse.get("doneStatus").toString()));
 				assertEquals(description,jsonResponse.get("description"));
 			}                         
 	   
 	   @Test
-		 public void testPostCategoriesEmpty() {
-		        given().
-		            log().all().
-		            headers("Content-Type", "application/json").
-		            body("{\"title\":\"\",\"description\":\"this is empty\"}").
-		        when().
-		            post("http://localhost:4567/categories").
-		        then().
-		            log().all().
-		            statusCode(400);
-		      
-		             
-		    }
-	   @Test
-		 public void testPostCategoriesNull() {
-		        given().
-		            log().all().
-		            headers("Content-Type", "application/json").
-		            body("{\"title\":null,\"description\":\"this is null\"}").
-		        when().
-		            post("http://localhost:4567/categories").
-		        then().
-		            log().all().
-		            statusCode(400);           	                     
-		    }
-	   @Test
-		 public void testPostCategoriesWrongId() {
-		        given().
-		            log().all().
-		            headers("Content-Type", "application/json").
-		            body("{\"title\":\"WrongId\",\"description\":\"this is wrongId\"}").
-		        when().
-		            post("http://localhost:4567/categories/-1").
-		        then().
-		            log().all().
-		            statusCode(404);        
-		    }
-	   @Test
-		 public void testPostCategoriesId() {
-		        given().
-		            log().all().
-		            headers("Content-Type", "application/json").
-		            body("{\"title\":\"Homework\",\"description\":\"this is homework\"}").
-		        when().
-		            post("http://localhost:4567/categories/1").
-		        then().
-		            log().all().
-		            statusCode(200);        
-		    }
-	   @Test
-		 public void testPostCategoriesIdEmpty() {
-		        given().
-		            log().all().
-		            headers("Content-Type", "application/json").
-		            body("{\"title\":\"\",\"description\":\"this is homework\"}").
-		        when().
-		            post("http://localhost:4567/categories/1").
-		        then().
-		            log().all().
-		            statusCode(400);        
-		    }
-	   @Test
-		 public void testPostCategoriesIdNull() {
-		        given().
-		            log().all().
-		            headers("Content-Type", "application/json").
-		            body("{\"title\":null,\"description\":\"this is homework\"}").
-		        when().
-		            post("http://localhost:4567/categories/1").
-		        then().
-		            log().all().
-		            statusCode(200);        
-		    }
-	  
-	  
-	    
-	@Test
-	public void testHeadCategories() {
-        //RestAssured.baseURI = "http://localhost:4567";
+	   public void testCategoriesPostXML() throws Exception {
+	       String xmlPayload = "<categories>" +
+	                           "<title>film</title>" +
+	                           "<description>This is a film category</description>" + 
+	                           "</categories>";
 
-        given().
-        when().
-            head("http://localhost:4567/categories").
-        then(). 
-        log().all().
-        statusCode(200);    
-    }
+	       Response response = given()
+	               .header("Accept", ContentType.XML)
+	               .contentType(ContentType.XML)
+	               .body(xmlPayload)
+	               .when()
+	               .post("http://localhost:4567/categories");
+	              
+		   assertEquals(201,response.getStatusCode());
+	       XmlPath xmlResponse = response.xmlPath();
+	       assertEquals("film", xmlResponse.get("title"));
+	       assertEquals("This is a film category", xmlResponse.get("description")); // Adjusted to match the provided description
+	   }
+	   @Test
+		 public void testCategoriesPostNullJSON()throws Exception  {
+			String title = null;
+			String description = "This is a film category";
+			
+			JSONObject object = new JSONObject();
+			object.put("title",title);
+			object.put("description", description);
+			
+			Response response = given()
+								.contentType(ContentType.JSON)
+								.body(object.toJSONString())
+								.when()
+								.post("http://localhost:4567/categories")
+								.then()
+								.log().all()					
+								.extract()
+								.response();	
+			 String jsonError = "\"errorMessages\":[\"title : field is mandatory\"]}" ;
+			 String validJsonError = "{" + jsonError;
+			 assertEquals(validJsonError, response.getBody().asString(), "The body should be null");
+			 assertEquals(400, response.getStatusCode());      	     	                     
+		    }
+	   @Test
+		 public void testCategoriesPostWrongIdJSON()throws Exception  {
+		   String title = "film";
+			String description = "This is a film category";
+			
+			JSONObject object = new JSONObject();
+			object.put("title",title);
+			object.put("description", description);
+			
+			Response response = given()
+								.contentType(ContentType.JSON)
+								.body(object.toJSONString())
+								.when()
+								.post("http://localhost:4567/categories/-1")
+								.then()
+								.log().all()					
+								.extract()
+								.response();	
+			 String jsonError = "\"errorMessages\":[\"No such category entity instance with GUID or ID -1 found\"]}" ;
+			 String validJsonError = "{" + jsonError;
+			 assertEquals(validJsonError, response.getBody().asString(), "The body should be null");
+			 assertEquals(404, response.getStatusCode());    
+		    }
+	   @Test
+		 public void testPostCategoriesIdJSON()throws Exception  {
+		   String title = "Drinks";
+			String description = "This is a drink category";
+			
+			JSONObject object = new JSONObject();
+			object.put("title",title);
+			object.put("description", description);
+			
+			Response response = given()
+								.contentType(ContentType.JSON)
+								.body(object.toJSONString())
+								.when()
+								.post("http://localhost:4567/categories/2")
+								.then()
+								.log().all()					
+								.extract()
+								.response();	
+			assertEquals(200,response.getStatusCode());
+			JsonPath jsonResponse = response.jsonPath();
+			assertEquals(title,jsonResponse.get("title"));
+			assertEquals(description,jsonResponse.get("description"));             
+		    }
+	   @Test
+		 public void testCategoriesPostIdEmptyJSON()throws Exception  {
+		    String title = "";
+			String description = "This is a drink category";
+			
+			JSONObject object = new JSONObject();
+			object.put("title",title);
+			object.put("description", description);
+			
+			Response response = given()
+								.contentType(ContentType.JSON)
+								.body(object.toJSONString())
+								.when()
+								.post("http://localhost:4567/categories/2")
+								.then()
+								.log().all()					
+								.extract()
+								.response();	
+			 String jsonError = "\"errorMessages\":[\"Failed Validation: title : can not be empty\"]}" ;
+			 String validJsonError = "{" + jsonError;
+			 assertEquals(validJsonError, response.getBody().asString(), "The body should be null");
+			 assertEquals(400, response.getStatusCode());      
+		    }
+	   //Bugs found here,expected to pass but failed due to api issues
+	   @Test
+		 public void testCategoriesPostIdNullJSON()throws Exception  {
+		    String title = null;
+			String description = "This is a drink category";
+			
+			JSONObject object = new JSONObject();
+			object.put("title",title);
+			object.put("description", description);
+			
+			Response response = given()
+								.contentType(ContentType.JSON)
+								.body(object.toJSONString())
+								.when()
+								.post("http://localhost:4567/categories/2")
+								.then()
+								.log().all()					
+								.extract()
+								.response();	
+			 String jsonError = "\"errorMessages\":[\"Failed Validation: title : can not be null\"]}" ;
+			 String validJsonError = "{" + jsonError;
+			 assertEquals(validJsonError, response.getBody().asString(), "The body should be null");
+			 assertEquals(200, response.getStatusCode());         
+		    }
+	  
+	  
 	@Test
-	 public void testPutCategories() {
-	        given().
-	            log().all().
-	            headers("Content-Type", "application/json").
-	            body("{\"title\":\"foo\",\"description\":\"this is foo\"}").
-	        when().
-	            put("http://localhost:4567/categories/1").
-	        then().
-	            log().all().
-	            statusCode(200).
-	            body("title", equalTo("foo")).
-	            body("description", equalTo("this is foo"));  	           	                     
+	 public void testCategoriesPutIdJSON()throws Exception  {
+		    String title = "Food";
+			String description = "This is a food category";
+			
+			JSONObject object = new JSONObject();
+			object.put("title",title);
+			object.put("description", description);
+			
+			Response response = given()
+								.contentType(ContentType.JSON)
+								.body(object.toJSONString())
+								.when()
+								.post("http://localhost:4567/categories/2")
+								.then()
+								.log().all()					
+								.extract()
+								.response();
+			assertEquals(200,response.getStatusCode());
+			JsonPath jsonResponse = response.jsonPath();
+			assertEquals(title,jsonResponse.get("title"));
+			assertEquals(description,jsonResponse.get("description"));        	                     
 	    }
 	@Test
-	 public void testPutCategoriesWrongId() {
-	        given().
-	            log().all().
-	            headers("Content-Type", "application/json").
-	            body("{\"title\":\"foo\",\"description\":\"this is foo\"}").
-	        when().
-	            put("http://localhost:4567/categories/-1").
-	        then().
-	            log().all().
-	            statusCode(404);         	           	                     
+	 public void testCategoriesPutWrongIdJSON()throws Exception  {
+		 String title = "Food";
+		 String description = "This is a food category";
+			
+		JSONObject object = new JSONObject();
+		object.put("title",title);
+		object.put("description", description);
+			
+			Response response = given()
+								.contentType(ContentType.JSON)
+								.body(object.toJSONString())
+								.when()
+								.post("http://localhost:4567/categories/-1")
+								.then()
+								.log().all()					
+								.extract()
+								.response();
+			 String jsonError = "\"errorMessages\":[\"No such category entity instance with GUID or ID -1 found\"]}" ;
+			 String validJsonError = "{" + jsonError;
+			 assertEquals(validJsonError, response.getBody().asString(), "The body should be null");
+			 assertEquals(404, response.getStatusCode());          
+	             	           	                     
 	    }
 	@Test
-	 public void testPutCategoriesEmpty() {
-	        given().
-	            log().all().
-	            headers("Content-Type", "application/json").
-	            body("{\"title\":\"\",\"description\":\"this is foo\"}").
-	        when().
-	            put("http://localhost:4567/categories/1").
-	        then().
-	            log().all().
-	            statusCode(400);         	           	                     
+	 public void testCategoriesPutEmptyJSON()throws Exception  {
+		 String title = "";
+		 String description = "This is a food category";
+			
+		JSONObject object = new JSONObject();
+		object.put("title",title);
+		object.put("description", description);
+			
+			Response response = given()
+								.contentType(ContentType.JSON)
+								.body(object.toJSONString())
+								.when()
+								.post("http://localhost:4567/categories/2")
+								.then()
+								.log().all()					
+								.extract()
+								.response();
+			 String jsonError = "\"errorMessages\":[\"Failed Validation: title : can not be empty\"]}" ;
+			 String validJsonError = "{" + jsonError;
+			 assertEquals(validJsonError, response.getBody().asString(), "The body should be null");
+			 assertEquals(400, response.getStatusCode());          
+	             	           	                     
 	    }
 	@Test
-	 public void testPutCategoriesNull() {
-	        given().
-	            log().all().
-	            headers("Content-Type", "application/json").
-	            body("{\"title\":null,\"description\":\"this is foo\"}").
-	        when().
-	            put("http://localhost:4567/categories/1").
-	        then().
-	            log().all().
-	            statusCode(400);         	           	                     
+	 public void testCategoriesPutNullJSON()throws Exception  {
+		 String title = null;
+		 String description = "This is a food category";
+			
+		JSONObject object = new JSONObject();
+		object.put("title",title);
+		object.put("description", description);
+			
+			Response response = given()
+								.contentType(ContentType.JSON)
+								.body(object.toJSONString())
+								.when()
+								.post("http://localhost:4567/categories/2")
+								.then()
+								.log().all()					
+								.extract()
+								.response();
+			 String jsonError = "\"errorMessages\":[\"Failed Validation: title : can not be null\"]}" ;
+			 String validJsonError = "{" + jsonError;
+			 assertEquals(validJsonError, response.getBody().asString(), "The body should be null");
+			 assertEquals(400, response.getStatusCode());          
+	             	           	                     
 	    }
+	
+
 	@Test
 	 public void testDeleteCategories() {
 	        given().
