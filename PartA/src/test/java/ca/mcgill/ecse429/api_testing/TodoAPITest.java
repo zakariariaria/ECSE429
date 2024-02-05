@@ -630,5 +630,108 @@ public class TodoAPITest {
 				.response();
 		assertEquals(200, response.getStatusCode());
 	}**/
+	
+	@Test
+	public void testPostTodoWithInvalidJSON() throws Exception {
+	   
+	    String invalidJsonPayload = "{\"title\": \"New Todo\" \"doneStatus\": false, \"description\": \"Missing comma between fields\"}";
+
+	   
+	    Response response = given()
+	                            .contentType(ContentType.JSON)
+	                            .body(invalidJsonPayload)
+	                            .when()
+	                            .post("http://localhost:4567/todos");
+
+	   
+	    assertEquals(400, response.getStatusCode(), "API should return 400 Bad Request for invalid JSON");
+	}
+	
+	@Test
+	public void testPostTodoWithInvalidXML() throws Exception {
+	    
+	    String invalidXmlPayload = "<todo><title>New Todo</title><doneStatus>false</description></todo>";
+
+	    
+	    Response response = given()
+	                            .header("Accept", ContentType.XML)
+	                            .contentType(ContentType.XML)
+	                            .body(invalidXmlPayload)
+	                            .when()
+	                            .post("http://localhost:4567/todos");
+
+	    
+	    assertEquals(400, response.getStatusCode(), "API should return 400 Bad Request for invalid XML");
+	}
+	
+	@Test
+	public void testPutIDTodosWithInvalidJSON() throws Exception{		
+		
+		String title = "placeholder";
+		boolean doneStatus = false;
+		String description = "";
+
+		JSONObject object = new JSONObject();
+		object.put("title",title);
+		object.put("doneStatus", doneStatus);
+		object.put("description", description);
+
+		Response responsePost = given()
+				.contentType(ContentType.JSON)
+				.body(object.toJSONString())
+				.when()
+				.post("http://localhost:4567/todos");
+
+		assertEquals(201,responsePost.getStatusCode());
+
+		JsonPath jsonResponse = responsePost.jsonPath();
+		String todoID = jsonResponse.get("id");
+
+	    String invalidJsonPayload = "{\"title\": \"New Todo\" \"doneStatus\": false, \"description\": \"Missing comma between fields\"}";
+
+		Response responsePut = given()
+				.contentType(ContentType.JSON)
+				.body(invalidJsonPayload)
+				.when()
+				.put("http://localhost:4567/todos/"+todoID);
+
+		assertEquals(400, responsePut.getStatusCode());
+	}
+	
+	@Test
+	public void testPutIDTodosWithInvalidXML() throws Exception{		
+		
+	    String xmlPayload = "<todo>" +
+	                        "<title>placeholder</title>" +
+	                        "<doneStatus>false</doneStatus>" +
+	                        "<description></description>" +
+	                        "</todo>";
+
+	    
+	    Response responsePost = given()
+	                            .contentType(ContentType.XML)
+	                            .accept(ContentType.XML)
+	                            .body(xmlPayload)
+	                            .when()
+	                            .post("http://localhost:4567/todos");
+
+	    assertEquals(201, responsePost.getStatusCode());
+
+	    XmlPath postResponseXml = responsePost.xmlPath();
+	    String todoID = postResponseXml.getString("todo.id");
+
+	    
+	    String invalidXmlPayload = "<todo><title>New Todo</title><doneStatus>false</description></todo>";
+
+	   
+	    Response responseUpdate = given()
+	                              .contentType(ContentType.XML)
+	                              .accept(ContentType.XML)
+	                              .body(invalidXmlPayload)
+	                              .when()
+	                              .post("http://localhost:4567/todos/" + todoID);
+
+	    assertEquals(400, responseUpdate.getStatusCode());
+	}
 	  
 }
