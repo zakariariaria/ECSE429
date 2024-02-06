@@ -1,0 +1,79 @@
+CHARTER
+-----------------------------------------------
+Identify capabilities and areas of potential instability of the “rest api todo list manager”
+
+Build
+-----------------------------------------------
+runTodoManagerRestAPI-1.5.5.jar
+
+Environment
+-----------------------------------------------
+iOS 10.15 Catalina
+Screen resolution: 1920x1080
+
+START
+-----------------------------------------------
+8:45 PM January 31st, 2024
+
+TESTER
+-----------------------------------------------
+Menad Kessaci
+menad.kessaci@mail.mcgill.ca
+260807381
+
+TASK BREAKDOWN
+-----------------------------------------------
+
+#DURATION
+45 minutes
+-----------------------------------------------
+8:00 Booted up application
+GET /projects returned all the instances of project HTTP 200
+
+8:02
+HEAD /projects returned nothing
+Should have returned headers for all the instances of project HTTP 200
+
+8:04
+POST /projects returned "{"id":"2","title":"","completed":"false","active":"false","description":""}" HTTP 201
+This is expected - We should be able to create project without a ID using the field values in the body of the message
+
+8:07
+POST /projects including body of project infor returned "Failed Validation: completed should be BOOLEAN, active should be BOOLEAN" HTTP 400
+This is not expected, the API should have added the project with the information in the body
+
+8:10
+GET http://localhost:4567/projects/1: correctly returned the project with ID 1 HTTP 200
+
+8:13
+GET http://localhost:4567/projects/25: returned "errorMessages": "Could not find an instance with projects/25" HTTP 404
+According to swagger, we should have received :  "description": "Could not find a specific project"
+
+8:18
+DELETE http://localhost:4567/projects/1: Nothing is printed when deleting. HTTP 200
+
+8:20
+GET http://localhost:4567/projects/1: returned "errorMessages":"Could not find an instance with project/1" HTTP 404
+According to Swagger, should have returned: "Could not find a specific project"
+
+8:25
+OPTIONS http://localhost:4567/projects/: returned nothing. HTTP 200
+According to swagger we should have seen all options of endpoint project
+
+8:29
+PATCH http://localhost:4567/projects: returned nothing, method not allowed as expected. HTTP 405
+
+8:33
+PUT http://localhost:4567/projects/2?title=MenadKessaci: should have replaced the title of project of ID 2, instead received the information of the project to be modified with no modifications at all HTTP 200
+
+8:38
+GET http://localhost:4567/projects/2: the title was effectively not updated to MenadKessaci as expected from the return of previous command HTTP 200
+
+8:42
+PUT http://localhost:4567/projects/14751?title=DoNotExist: attempting to update a project with an ID that does not exist, received "errorMessages": "Invalid GUID for 14751 entity project". As expected, however the message should have been: "Could not find a specific project" according to Swagger Documentation  HTTP 404
+
+8:45
+GET http://localhost:4567/shutdown: Works as intended
+
+----------------- session end ----------------------------------------
+
