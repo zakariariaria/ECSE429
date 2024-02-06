@@ -1,0 +1,188 @@
+CHARTER
+-----------------------------------------------
+Identify capabilities and areas of potential instability of the “rest
+api todo list manager”.
+Identify documented and undocumented “rest api todo list manager”
+capabilities.
+For each capability create a script or small program to demonstrate
+the capability.
+Exercise each capability identified with data typical to the intended
+use of the application.
+
+Build
+-----------------------------------------------
+runTodoManagerRestAPI-1.5.5.jar
+
+Environment
+-----------------------------------------------
+Windows 11
+Screen resolution: 1920x1080
+
+START
+-----------------------------------------------
+7:30 PM January 31st, 2024
+
+TESTER
+-----------------------------------------------
+Zakaria Bouhemhem
+zakaria.bouhemhem@mail.mcgill.ca
+260930807
+
+DURATION
+-----------------------------------------------
+45 minutes
+
+SUMMARY OF SESSION FINDINGS
+-----------------------------------------------
+GET /todos successfully returns all instances of todos.
+HEAD /todos does not return expected headers.
+POST /todos validates that the title field is mandatory.
+GET /todos/1 correctly retrieves a todo by ID.
+DELETE /todos/1 removes a todo, verified by a follow-up GET request returning 404.
+OPTIONS /todos does not display allowed methods.
+PUT requests with query parameters do not update as expected.
+
+LIST OF CONCERNS
+-----------------------------------------------
+Inconsistency between API behavior and Swagger documentation.
+Certain HTTP methods not functioning as intended.
+Ambiguity in error message content and HTTP status codes.
+
+LIST OF NEW TESTING IDEAS IDENTIFIED IN SESSION
+-----------------------------------------------
+Explore more edge cases for todo creation and deletion.
+Test response headers in more detail.
+Verify behavior when updating todos with non-existing IDs.
+Confirm the proper handling of tasks and their relation to todos.
+Examine OPTIONS request behavior across different endpoints.
+
+FILES REFERENCED OR CREATED DURING THE SESSION
+-----------------------------------------------
+runTodoManagerRestAPI-1.5.5.jar (API build file)
+SessionNotes.txt
+
+-----------------------------------------------
+7:30 Booted up application
+GET /todos: returned all the instances of todo HTTP 200
+
+7:31 
+HEAD /todos: returned nothing 
+Should have returned headers for all the instances of todo HTTP 200
+
+7:31
+POST /todos: returned "errorMessages": "title field is mandatory" HTTP 400
+This is expected
+
+7:34
+POST http://localhost:4567/todos?title=placeholder: returned "errorMessages": "title field is mandatory"
+This is not working as intended, the only mandatory field is title and so the todo should have been created. According to swagger, we should have received the message : "description": "Created a todo" HTTP 400
+
+7:35
+GET http://localhost:4567/todos/1: correctly returned the todo with ID 1 HTTP 200
+
+7:36 
+GET http://localhost:4567/todos/6: returned "errorMessages": "Could not find an instance with todos/6" HTTP 404
+According to swagger, we should have received :  "description": "Could not find a specific todo" 
+
+7:39
+DELETE http://localhost:4567/todos/1: Nothing is printed when deleting. HTTP 200
+
+7:40
+GET http://localhost:4567/todos/1: returned "errorMessages":"Could not find an instance with todos/1" HTTP 404
+This is working as expected 
+
+7:42
+OPTIONS http://localhost:4567/todos: returned nothing. HTTP 200
+According to swagger we should have seen all options of todos
+
+7:42 
+PATCH http://localhost:4567/todos: returned nothing, as expected. HTTP 405
+
+7:44
+PUT http://localhost:4567/todos/2?title=placeholder: should have replaced the title of todo of ID 2, instead received "errorMessages':"title : field is mandatory" HTTP 400
+
+7:45
+GET http://localhost:4567/todos/2: the title was effectively not updated to placeholder as expected from the error message HTTP 200
+
+7:46
+PUT http://localhost:4567/todos/7?title=placeholder: attempting to update a todo with an ID that does not exist, received "errorMessages": "Invalid GUID for 7 entity todo". Which is behaving as expected, however the message in the swagger should have been: "Could not find a specific todo"  HTTP 404
+
+7:48
+POST http://localhost:4567/todos/7?title=placeholder: Received "errorMessages": "No such todo entity instance with GUID or ID 7 found". According, to swagger we should have received : "Could not find a specific todo" HTTP 404
+
+7:49
+POST http://localhost:4567/todos/2?title=placeholder: Received the JSON of todo with ID 2, should have amended the todo. HTTP 200
+
+7:51
+GET http://localhost:4567/todos/2: The todo was effectively not changed HTTP 200
+
+7:51
+OPTIONS http://localhost:4567/todos/2: Should have received the options for the endpoint of todo with ID 2, received nothing instead HTTP 200
+
+7:52
+OPTIONS http://localhost:4567/todos/6: Received nothing, which seems to be expected according to swagger. HTTP 200
+
+7:53
+HEAD http://localhost:4567/todos/2: Received nothing, should have received the headers of todo with ID 2. HTTP 200
+
+7:55
+HEAD http://localhost:4567/todos/2: Received nothing, should have received the error message : "Could not find a specific todo" HTTP 404
+
+7:56
+PATCH http://localhost:4567/todos/2: Received nothing HTTP 405
+
+7:57
+GET http://localhost:4567/todos/2/tasksof: Received the project items related to todo with ID 2, as expected HTTP 200
+
+7:58
+GET http://localhost:4567/todos/1/tasksof: Received the project items related to todo with ID 1, was this expected ? HTTP 200
+ 
+7:59
+PUT http://localhost:4567/todos/2/tasksof: Received nothing, according to swagger should have received the error message: "method not allowed" HTTP 405
+
+8:00
+POST http://localhost:4567/todos/2/tasksof?id=1: Succesfully added the project with ID 1 to the todo of ID 2. HTTP 201
+
+8:02
+DELETE http://localhost:4567/todos/2/tasksof: Received nothing should have received the error message: "method not allowed" HTTP 405
+
+8:04
+OPTIONS http://localhost:4567/todos/2/tasksof: Received nothing, should have received the options for todo with ID 2 HTTP 200
+
+8:05
+HEAD http://localhost:4567/todos/2/tasksof: Received nothing, should have received the headers for the projects of todo with ID 2 HTTP 200
+
+8:06
+HEAD http://localhost:4567/todos/1/tasksof: Received nothing, is it intended even though todo with ID 1 was deleted ? HTTP 200
+
+8:07
+PATCH http://localhost:4567/todos/2/tasksof: Received nothing. HTTP 405
+
+8:08
+GET http://localhost:4567/todos/2/tasksof/1: Received nothing, as intended. Should have received HTTP 405, but received HTTP 404
+
+8:09
+PUT http://localhost:4567/todos/2/tasksof/1: Received nothing, as expected. HTTP 405
+
+8:10
+POST http://localhost:4567/todos/2/tasksof/1: Received nothing, as expected. Should have received HTTP 405, but received HTTP 404
+
+8:11
+DELETE http://localhost:4567/todos/2/tasksof/1: Received nothing, HTTP 200 meaning the relationship should have been deleted
+
+8:12
+GET http://localhost:4567/todos/2: The project with ID 1 seems to have been deleted. HTTP 200
+
+8:13
+OPTIONS http://localhost:4567/todos/2/tasksof/2: Received nothing, should have shown all options for the projects of ID 2 related to todo of ID 2. HTTP 200
+
+8:14
+OPTIONS http://localhost:4567/todos/2/tasksof/1: Again received nothing, should an error message have been shown since their relationship was deleted ? HTTP 200
+
+8:14
+HEAD http://localhost:4567/todos/2/tasksof/1: Received nothing, as expected. HTTP 404 instead of 405
+
+8:15
+GET http://localhost:4567/shutdown: Works as intended
+
+----------------- session end ----------------------------------------
