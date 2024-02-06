@@ -618,7 +618,7 @@ public class TodoAPITest {
 		assertEquals(200, response.getStatusCode());
 	}
 	
-	/**@Test Does not work with XML, only JSON
+	@Test //Does not work with XML, only JSON
 	public void testOptionsIDTodosXML() throws Exception{
 		Response response = given()
 				.header("Accept", ContentType.XML)
@@ -629,7 +629,7 @@ public class TodoAPITest {
 				.extract()
 				.response();
 		assertEquals(200, response.getStatusCode());
-	}**/
+	}
 	
 	@Test
 	public void testPostTodoWithInvalidJSON() throws Exception {
@@ -813,10 +813,452 @@ public class TodoAPITest {
 	        .extract()
 	        .response();
 
-	    
-
 	    assertEquals("Could not find any instances with todos/"+todoID, responseGet.getBody().xmlPath().get().toString());
 	    assertEquals(404, responseGet.getStatusCode());
 	}
+	
+	// Interroperability 
+	
+	@Test
+    public void testTodosCategoriesGetJSON() throws Exception{
+        Response response = given()
+                                .when()
+                                .get("http://localhost:4567/todos/1/categories")
+                                .then()
+                                .extract()
+                                .response();
+        
+        assertNotNull(response.getBody());
+        assertEquals(200, response.getStatusCode());
+    }
+	
+	@Test
+    public void testTodosCategoriesGetXML() throws Exception{
+		Response response = given()
+				.header("Accept", ContentType.XML)
+				.when()
+				.get("http://localhost:4567/todos/1/categories")
+				.then()
+				.contentType(ContentType.XML)
+				.extract()
+				.response();
+
+		assertNotNull(response.getBody().xmlPath().get());
+		assertEquals(200, response.getStatusCode());
+    }
+	
+	@Test // Bug found, can find categories for an invalid ID
+    public void testTodosCategoriesInvalidIDGetJSONExpected() throws Exception{
+		Response response = given()
+				.when()
+				.get("http://localhost:4567/todos/1000/categories")
+				.then()
+				.extract()
+				.response();
+
+		String jsonError = "\"errorMessages\":[\"Could not find an instance with todos/1000\"]}" ;
+		String validJsonError = "{" + jsonError;
+
+		assertEquals(validJsonError, response.getBody().asString(), "The body should be null");
+		assertEquals(404, response.getStatusCode());
+    }
+	
+	@Test
+    public void testTodosCategoriesInvalidIDGetJSONUnexpected() throws Exception{
+		Response response = given()
+				.when()
+				.get("http://localhost:4567/todos/1000/categories")
+				.then()
+				.extract()
+				.response();
+
+		assertNotNull(response.getBody());
+		assertEquals(200, response.getStatusCode());
+    }
+	
+	@Test // Does not work iwth XML
+	public void testTodosCategoriesHeadXML() throws Exception {
+	    Response response = given()
+	            .header("Accept", ContentType.XML)
+	            .when()
+	            .head("http://localhost:4567/todos/1/categories")
+	            .then()
+	            .contentType(ContentType.XML)
+	            .extract()
+	            .response();
+
+	   
+	    String contentType = response.header("Content-Type");
+	    assertNotNull(contentType);
+	    assertTrue(contentType.contains("xml"));
+	    assertEquals(200, response.getStatusCode());
+	}
+	
+	@Test
+    public void testTodosCategoriesHeadJSON() throws Exception{
+        Response response = given()
+                                .when()
+                                .head("http://localhost:4567/todos/1/categories")
+                                .then()
+                                .extract()
+                                .response();
+        
+        assertNotNull(response.getBody());
+        assertEquals(200, response.getStatusCode());
+    }
+	
+	@Test
+	public void testTodosCategoriesPostJSON() throws Exception{
+		String title = "placeholder";
+		boolean doneStatus = false;
+		String description = "";
+
+		JSONObject objectTodo = new JSONObject();
+		objectTodo.put("title",title);
+		objectTodo.put("doneStatus", doneStatus);
+		objectTodo.put("description", description);
+
+		Response responseTodo = given()
+				.contentType(ContentType.JSON)
+				.body(objectTodo.toJSONString())
+				.when()
+				.post("http://localhost:4567/todos");
+
+		assertEquals(201,responseTodo.getStatusCode());
+
+		JsonPath jsonResponse = responseTodo.jsonPath();
+		String todoID = jsonResponse.get("id");
+		
+		JSONObject objectCategories = new JSONObject();
+		objectCategories.put("title",title);
+		objectCategories.put("description", description);
+		
+		Response response = given()
+				.contentType(ContentType.JSON)
+				.body(objectCategories.toJSONString())
+				.when()
+				.post("http://localhost:4567/todos/"+todoID+"/categories");
+		
+		assertEquals(201,response.getStatusCode());
+		assertEquals(title,jsonResponse.get("title"));
+		assertEquals(description,jsonResponse.get("description"));
+	}
+	
+	@Test
+	public void testTodosCategoriesPostXML() throws Exception {
+	    String title = "placeholder";
+	    boolean doneStatus = false;
+	    String description = "";
+
+	    String xmlTodo = "<todo>"
+	            + "<title>" + title + "</title>"
+	            + "<doneStatus>" + doneStatus + "</doneStatus>"
+	            + "<description>" + description + "</description>"
+	            + "</todo>";
+
+	    Response responseTodo = given()
+	            .contentType(ContentType.XML)
+	            .body(xmlTodo)
+	            .when()
+	            .post("http://localhost:4567/todos");
+
+	    assertEquals(201, responseTodo.getStatusCode());
+
+	    XmlPath xmlResponse = new XmlPath(responseTodo.getBody().asString());
+	    String todoID = xmlResponse.getString("id");
+
+	    String xmlCategories = "<category>"
+	            + "<title>" + title + "</title>"
+	            + "<description>" + description + "</description>"
+	            + "</category>";
+
+	    Response response = given()
+	            .contentType(ContentType.XML)
+	            .body(xmlCategories)
+	            .when()
+	            .post("http://localhost:4567/todos/" + todoID + "/categories");
+
+	    assertEquals(201, response.getStatusCode());
+	    xmlResponse.setRootPath("category");
+	    assertEquals(title, xmlResponse.getString("title"));
+	    assertEquals(description, xmlResponse.getString("description"));
+	}
+	
+	@Test
+	public void testTodosCategoriesPostJSONInvalidID() throws Exception{
+		String title = "placeholder";
+		String description = "";
+
+		
+		JSONObject objectCategories = new JSONObject();
+		objectCategories.put("title",title);
+		objectCategories.put("description", description);
+		
+		Response response = given()
+				.contentType(ContentType.JSON)
+				.body(objectCategories.toJSONString())
+				.when()
+				.post("http://localhost:4567/todos/"+1000+"/categories");
+		
+		assertEquals(404,response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosCategoriesPostXMLInvalidID() throws Exception{
+		String title = "placeholder";
+		String description = "";
+
+		
+		String xmlCategories = "<category>"
+	            + "<title>" + title + "</title>"
+	            + "<description>" + description + "</description>"
+	            + "</category>";
+		
+		Response response = given()
+				.contentType(ContentType.XML)
+				.body(xmlCategories)
+				.when()
+				.put("http://localhost:4567/todos/"+1000+"/categories");
+		
+		assertEquals(405,response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosCategoriesPutXML() throws Exception {
+	    String title = "placeholder";
+	    String description = "";
+
+	    String xmlBody = "<category>"
+	                     + "<title>" + title + "</title>"
+	                     + "<description>" + description + "</description>"
+	                     + "</category>";
+
+	    Response response = given()
+	            .contentType(ContentType.XML)
+	            .body(xmlBody)
+	            .when()
+	            .put("http://localhost:4567/todos/1/categories");
+
+	    assertEquals(405, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosCategoriesDeleteXML() throws Exception {
+	    Response response = given()
+	            .contentType(ContentType.XML)
+	            .when()
+	            .delete("http://localhost:4567/todos/1/categories");
+
+	    assertEquals(405, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosCategoriesDeleteJSON() throws Exception {
+	    Response response = given()
+	            .when()
+	            .delete("http://localhost:4567/todos/1/categories");
+
+	    assertEquals(405, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosTaskofHeadXML() throws Exception {
+	    Response response = given()
+	            .contentType(ContentType.XML)
+	            .when()
+	            .head("http://localhost:4567/todos/1/tasksof");
+
+	    assertEquals(200, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosTaskofHeadJSON() throws Exception {
+	    Response response = given()
+	            .when()
+	            .head("http://localhost:4567/todos/1/tasksof");
+
+	    assertEquals(200, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosTaskofPutJSON() throws Exception {
+	    Response response = given()
+	            .when()
+	            .put("http://localhost:4567/todos/1/tasksof");
+
+	    assertEquals(405, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosTaskofPutXML() throws Exception {
+	    Response response = given()
+	            .contentType(ContentType.XML)
+	            .when()
+	            .put("http://localhost:4567/todos/1/tasksof");
+
+	    assertEquals(405, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosTaskofDeleteXML() throws Exception {
+	    Response response = given()
+	            .contentType(ContentType.XML)
+	            .when()
+	            .delete("http://localhost:4567/todos/1/tasksof");
+
+	    assertEquals(405, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosTaskofDeleteJSON() throws Exception {
+	    Response response = given()
+	            .when()
+	            .delete("http://localhost:4567/todos/1/tasksof");
+
+	    assertEquals(405, response.getStatusCode());
+	}
+	
+	
+	@Test
+	public void testTodosCategoryGetJSON() throws Exception {
+	    Response response = given()
+	            .when()
+	            .get("http://localhost:4567/todos/1/categories/1");
+
+	    assertEquals(404, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosCategoryGetXML() throws Exception {
+	    Response response = given()
+	    		.contentType(ContentType.XML)
+	            .when()
+	            .get("http://localhost:4567/todos/1/categories/1");
+
+	    assertEquals(404, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosCategoryPostXML() throws Exception {
+	    Response response = given()
+	    		.contentType(ContentType.XML)
+	            .when()
+	            .post("http://localhost:4567/todos/1/categories/1");
+
+	    assertEquals(404, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosCategoryPostJSON() throws Exception {
+	    Response response = given()
+	            .when()
+	            .post("http://localhost:4567/todos/1/categories/1");
+
+	    assertEquals(404, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosCategoryPutJSON() throws Exception {
+	    Response response = given()
+	            .when()
+	            .put("http://localhost:4567/todos/1/categories/1");
+
+	    assertEquals(405, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosCategoryPutXML() throws Exception {
+	    Response response = given()
+	    		.contentType(ContentType.XML)
+	            .when()
+	            .put("http://localhost:4567/todos/1/categories/1");
+
+	    assertEquals(405, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosCategoryHeadXML() throws Exception {
+	    Response response = given()
+	    		.contentType(ContentType.XML)
+	            .when()
+	            .head("http://localhost:4567/todos/1/categories/1");
+
+	    assertEquals(404, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosCategoryHeadJSON() throws Exception {
+	    Response response = given()
+	            .when()
+	            .head("http://localhost:4567/todos/1/categories/1");
+
+	    assertEquals(404, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosTasksOfGetJSON() throws Exception {
+	    Response response = given()
+	            .when()
+	            .get("http://localhost:4567/todos/1/categories/1");
+
+	    assertEquals(404, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosTasksOfGetXML() throws Exception {
+	    Response response = given()
+	    		.contentType(ContentType.XML)
+	            .when()
+	            .get("http://localhost:4567/todos/1/categories/1");
+
+	    assertEquals(404, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosTasksOfPutJSON() throws Exception {
+	    Response response = given()
+	            .when()
+	            .put("http://localhost:4567/todos/1/categories/1");
+
+	    assertEquals(405, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosTasksOfPutXML() throws Exception {
+	    Response response = given()
+	    		.contentType(ContentType.XML)
+	            .when()
+	            .put("http://localhost:4567/todos/1/categories/1");
+
+	    assertEquals(405, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosTasksOfPostJSON() throws Exception {
+	    Response response = given()
+	            .when()
+	            .post("http://localhost:4567/todos/1/categories/1");
+
+	    assertEquals(404, response.getStatusCode());
+	}
+	
+	@Test
+	public void testTodosTasksOfPostXML() throws Exception {
+	    Response response = given()
+	    		.contentType(ContentType.XML)
+	            .when()
+	            .post("http://localhost:4567/todos/1/categories/1");
+
+	    assertEquals(404, response.getStatusCode());
+	}
+
+	
+	
+
+	
+	
+	
+	
+	
 	  
 }

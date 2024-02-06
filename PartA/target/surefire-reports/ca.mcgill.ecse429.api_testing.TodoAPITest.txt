@@ -1,33 +1,35 @@
 -------------------------------------------------------------------------------
 Test set: ca.mcgill.ecse429.api_testing.TodoAPITest
 -------------------------------------------------------------------------------
-Tests run: 29, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.278 s - in ca.mcgill.ecse429.api_testing.TodoAPITest
-ca.mcgill.ecse429.api_testing.TodoAPITest.testTodosGetXML  Time elapsed: 0.486 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testPutIDTodosNonExistingIDXML  Time elapsed: 0.033 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testHeadTodosJSON  Time elapsed: 0.01 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testPutIDTodosWithInvalidXML  Time elapsed: 0.043 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testPutIDTodosXML  Time elapsed: 0.032 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testHeadIDTodosXML  Time elapsed: 0.007 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testPostTodosJSON  Time elapsed: 0.108 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testPostIDTodosJSON  Time elapsed: 0.027 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testDeleteIDTodosNonExistingIDXML  Time elapsed: 0.016 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testGetIDTodosJSON  Time elapsed: 0.059 s
+Tests run: 31, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.194 s - in ca.mcgill.ecse429.api_testing.TodoAPITest
+ca.mcgill.ecse429.api_testing.TodoAPITest.testTodosGetJSON  Time elapsed: 0.041 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testDeleteIDTodosXML  Time elapsed: 0.494 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testDeleteIDAlreadyDeletedTodosXML  Time elapsed: 0.038 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testDeleteIDAlreadyDeletedTodosJSON  Time elapsed: 0.028 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testPutIDTodosNonExistingIDJSON  Time elapsed: 0.009 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testDeleteIDTodosNonExistingIDJSON  Time elapsed: 0.007 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testPostTodoWithInvalidJSON  Time elapsed: 0.007 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testDeleteIDTodosNonExistingIDXML  Time elapsed: 0.021 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testPostIDTodosJSON  Time elapsed: 0.03 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testPostTodosXML  Time elapsed: 0.042 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testPutIDTodosXML  Time elapsed: 0.034 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testHeadTodosXML  Time elapsed: 0.007 s
 ca.mcgill.ecse429.api_testing.TodoAPITest.testPutIDTodosWithInvalidJSON  Time elapsed: 0.023 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testPostTodosXML  Time elapsed: 0.027 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testTodosGetJSON  Time elapsed: 0.006 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testTodosGetNonExistingIDXML  Time elapsed: 0.015 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testGetIDTodosXML  Time elapsed: 0.025 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testTodosGetNonExistingIDJSON  Time elapsed: 0.006 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testPostTodosWithoutTitleJSON  Time elapsed: 0.007 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testPostIDTodosXML  Time elapsed: 0.028 s
 ca.mcgill.ecse429.api_testing.TodoAPITest.testPutIDTodosJSON  Time elapsed: 0.027 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testPutIDTodosNonExistingIDJSON  Time elapsed: 0.006 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testPostTodosWithoutTitleJSON  Time elapsed: 0.006 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testPostTodoWithInvalidJSON  Time elapsed: 0.006 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testPostTodosWithoutTitleXML  Time elapsed: 0.008 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testPostIDTodosXML  Time elapsed: 0.03 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testOptionsIDTodosJSON  Time elapsed: 0.008 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testHeadIDTodosJSON  Time elapsed: 0.007 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testHeadTodosXML  Time elapsed: 0.006 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testTodosGetNonExistingIDJSON  Time elapsed: 0.007 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testPostTodosJSON  Time elapsed: 0.024 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testPutIDTodosNonExistingIDXML  Time elapsed: 0.015 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testHeadTodosJSON  Time elapsed: 0.006 s
 ca.mcgill.ecse429.api_testing.TodoAPITest.testDeleteIDTodosJSON  Time elapsed: 0.024 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testPostTodoWithInvalidXML  Time elapsed: 0.008 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testDeleteIDTodosXML  Time elapsed: 0.036 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.testDeleteIDTodosNonExistingIDJSON  Time elapsed: 0.008 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testTodosGetNonExistingIDXML  Time elapsed: 0.012 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testHeadIDTodosXML  Time elapsed: 0.004 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testTodosGetXML  Time elapsed: 0.016 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testGetIDTodosJSON  Time elapsed: 0.054 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testPutIDTodosWithInvalidXML  Time elapsed: 0.023 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testPostTodosWithoutTitleXML  Time elapsed: 0.007 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testGetIDTodosXML  Time elapsed: 0.025 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testOptionsIDTodosJSON  Time elapsed: 0.006 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testHeadIDTodosJSON  Time elapsed: 0.004 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testPostTodoWithInvalidXML  Time elapsed: 0.005 s
