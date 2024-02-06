@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 Test set: ca.mcgill.ecse429.api_testing.TodoAPITest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.912 s - in ca.mcgill.ecse429.api_testing.TodoAPITest
-ca.mcgill.ecse429.api_testing.TodoAPITest.testGetTodos  Time elapsed: 1.881 s
-ca.mcgill.ecse429.api_testing.TodoAPITest.test_get_projects  Time elapsed: 0.012 s
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.066 s - in ca.mcgill.ecse429.api_testing.TodoAPITest
+ca.mcgill.ecse429.api_testing.TodoAPITest.test_get_projects  Time elapsed: 0.037 s
+ca.mcgill.ecse429.api_testing.TodoAPITest.testGetTodos  Time elapsed: 0.01 s
