@@ -128,7 +128,7 @@ assertEquals(200, response.getStatusCode());
     }
 	
 	@Test
-    public void testCategoriesWrongIdJSON() throws Exception  {
+    public void testCategoriesGetWrongIdJSON() throws Exception  {
 		Response response = given()
                 .when()
                 .get("http://localhost:4567/categories/-1")
@@ -143,7 +143,7 @@ assertEquals(200, response.getStatusCode());
     }
 	
 	@Test
-    public void testCategoriesWrongIdXML() throws Exception{
+    public void testCategoriesGetWrongIdXML() throws Exception{
         Response response = given()
         						.header("Accept", ContentType.XML)
                                 .when()
@@ -473,7 +473,7 @@ assertEquals(200, response.getStatusCode());
 								.contentType(ContentType.JSON)
 								.body(object.toJSONString())
 								.when()
-								.post("http://localhost:4567/categories/2")
+								.put("http://localhost:4567/categories/2")
 								.then()
 								.log().all()					
 								.extract()
@@ -521,12 +521,12 @@ assertEquals(200, response.getStatusCode());
 								.contentType(ContentType.JSON)
 								.body(object.toJSONString())
 								.when()
-								.post("http://localhost:4567/categories/-1")
+								.put("http://localhost:4567/categories/-1")
 								.then()
 								.log().all()					
 								.extract()
 								.response();
-			 String jsonError = "\"errorMessages\":[\"No such category entity instance with GUID or ID -1 found\"]}" ;
+			 String jsonError = "\"errorMessages\":[\"Invalid GUID for -1 entity category\"]}" ;
 			 String validJsonError = "{" + jsonError;
 			 assertEquals(validJsonError, response.getBody().asString(), "The body should be null");
 			 assertEquals(404, response.getStatusCode());          
@@ -544,7 +544,7 @@ assertEquals(200, response.getStatusCode());
 					.contentType(ContentType.XML)
 					.body(xmlPayload)
 					.when()
-					.post("http://localhost:4567/categories/-1")
+					.put("http://localhost:4567/categories/-1")
 					.then()
 					.log().all()
 					.extract()
@@ -553,7 +553,7 @@ assertEquals(200, response.getStatusCode());
 			assertEquals(404, response.getStatusCode());
 			// Use xmlPath to parse the XML response
 			XmlPath xmlResponse = response.xmlPath();
-		    assertEquals("No such category entity instance with GUID or ID -1 found", response.getBody().xmlPath().get().toString());	    
+		    assertEquals("Invalid GUID for -1 entity category", response.getBody().xmlPath().get().toString());	    
 
 
 		 
@@ -571,7 +571,7 @@ assertEquals(200, response.getStatusCode());
 								.contentType(ContentType.JSON)
 								.body(object.toJSONString())
 								.when()
-								.post("http://localhost:4567/categories/2")
+								.put("http://localhost:4567/categories/2")
 								.then()
 								.log().all()					
 								.extract()
@@ -594,7 +594,7 @@ assertEquals(200, response.getStatusCode());
 					.contentType(ContentType.XML)
 					.body(xmlPayload)
 					.when()
-					.post("http://localhost:4567/categories/1")
+					.put("http://localhost:4567/categories/1")
 					.then()
 					.log().all()
 					.extract()
@@ -619,15 +619,15 @@ assertEquals(200, response.getStatusCode());
 								.contentType(ContentType.JSON)
 								.body(object.toJSONString())
 								.when()
-								.post("http://localhost:4567/categories/2")
+								.put("http://localhost:4567/categories/2")
 								.then()
 								.log().all()					
 								.extract()
 								.response();
-			 //String jsonError = "\"errorMessages\":[\"Failed Validation: title : can not be null\"]}" ;
-			// String validJsonError = "{" + jsonError;
-			// assertEquals(validJsonError, response.getBody().asString(), "The body should be null");
-			 assertEquals(200, response.getStatusCode());                       	           	                     
+			 String jsonError = "\"errorMessages\":[\"title : field is mandatory\"]}" ;
+			 String validJsonError = "{" + jsonError;
+			 assertEquals(validJsonError, response.getBody().asString(), "The body should be null");
+			 assertEquals(400, response.getStatusCode());                       	           	                     
 	    }
 	@Test
 	 public void testCategoriesPutNullXML()throws Exception  {
@@ -641,15 +641,16 @@ assertEquals(200, response.getStatusCode());
 					.contentType(ContentType.XML)
 					.body(xmlPayload)
 					.when()
-					.post("http://localhost:4567/categories/1")
+					.put("http://localhost:4567/categories/1")
 					.then()
 					.log().all()
 					.extract()
 					.response();
 							
-			assertEquals(200, response.getStatusCode());
+			assertEquals(400, response.getStatusCode());
 			// Use xmlPath to parse the XML response
 			XmlPath xmlResponse = response.xmlPath();
+		    assertEquals("title : field is mandatory", response.getBody().xmlPath().get().toString());	    
 	}
 	
 
