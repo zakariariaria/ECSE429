@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.List;
 import java.util.Map;
 
+import io.cucumber.java.en.And;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.runner.RunWith;
@@ -371,6 +372,91 @@ public class CucumberStepDefinition {
 	        .post("http://localhost:4567/todos/" + this.id + "/categories");
 	}
 
-	
 
+	@When("a request is sent to create a new category with title {string}")
+	public void aRequestIsSentToCreateANewCategoryWithTitle(String title) {
+		this.title=title;
+		JSONObject requestBody = new JSONObject();
+		requestBody.put("title", title);
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.body(requestBody.toString())
+				.when()
+				.post("http://localhost:4567/categories");
+	}
+
+	@And("the response body should contain a category with title {string}")
+	public void theResponseBodyShouldContainACategoryWithTitle(String title) {
+		JsonPath jsonResponse = response.jsonPath();
+		assertEquals(title,jsonResponse.get("title"));
+	}
+
+	@When("a request is sent to create a new category with title {string} and description {string}")
+	public void aRequestIsSentToCreateANewCategoryWithTitleDescription(String title, String description) {
+		this.title=title;
+		JSONObject requestBody = new JSONObject();
+		requestBody.put("title", title);
+		requestBody.put("description", description);
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.body(requestBody.toString())
+				.when()
+				.post("http://localhost:4567/categories");
+	}
+
+	@And("the response body should contain a category with title {string} and description {string}")
+	public void theResponseBodyShouldContainACategoryWithTitleDescription(String title, String description) {
+		JsonPath jsonResponse = response.jsonPath();
+		assertEquals(title,jsonResponse.get("title"));
+		assertEquals(description,jsonResponse.get("description"));
+	}
+
+	@When("a request is sent to create a new category  with a missing title")
+	public void aRequestIsSentToCreateANewCategoryWithAMissingTitle() {
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.when()
+				.post("http://localhost:4567/categories");
+	}
+
+
+	@When("a request is sent to update the field of the category to title {string}")
+	public void aRequestIsSentToUpdateTheFieldOfTheCategoryToTitle(String title) {
+		this.title=title;
+		JSONObject requestBody = new JSONObject();
+		requestBody.put("title", title);
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.body(requestBody.toString())
+				.when()
+				.post("http://localhost:4567/categories/"+this.categoryId);
+	}
+
+	@When("a request is sent to update the field of the category to title {string} and description {string}")
+	public void aRequestIsSentToUpdateTheFieldOfTheCategoryToTitleAndDescription(String title, String description) {
+		this.title=title;
+		this.description=description;
+		JSONObject requestBody = new JSONObject();
+		requestBody.put("title", title);
+		requestBody.put("description", description);
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.body(requestBody.toString())
+				.when()
+				.post("http://localhost:4567/categories/"+this.categoryId);
+	}
+
+
+	@When("a request is sent to update the title of a category with id {string} to title {string}")
+	public void aRequestIsSentToUpdateTheTitleOfACategoryWithIdToTitle(String id, String title) {
+		this.categoryId=id;
+		this.title=title;
+		JSONObject requestBody = new JSONObject();
+		requestBody.put("title", title);
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.body(requestBody.toString())
+				.when()
+				.post("http://localhost:4567/categories/"+this.categoryId);
+	}
 }
