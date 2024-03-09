@@ -1,4 +1,4 @@
-Feature: Project Creation
+#As a user, I want to be able to create a project by specifying a name for it so it is quick to instanciate a project.
 
   Scenario: Successful project creation with only the name specified
     Given the user is on the project creation page

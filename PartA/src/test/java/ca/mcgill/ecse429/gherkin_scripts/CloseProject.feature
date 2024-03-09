@@ -1,4 +1,4 @@
-Feature: Project Closure
+#As a user, I want to be able to close a project to not mix a closed project with the open ones.
 
   Scenario: Successful closure of an active project
     Given the project manager is on the project details page

@@ -1,4 +1,4 @@
-Feature: Project Information Retrieval
+#As a user, I want to be able to retrieve Project Information by specifying its name to get all the information of a project at once.
 
   Scenario: Successful retrieval of project information by specifying its name
     Given the user is on the project information page

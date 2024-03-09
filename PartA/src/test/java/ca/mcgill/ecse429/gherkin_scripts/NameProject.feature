@@ -1,4 +1,4 @@
-Feature: Project Modification
+#As a user, I want to be able to modify the name of a Project by specifying a new name so users do not get mixed up between projects.
 
   Scenario: Successful modification of the name of a project
     Given the user is on the project details page
