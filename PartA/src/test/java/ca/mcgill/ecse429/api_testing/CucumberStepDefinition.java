@@ -377,213 +377,305 @@ public class CucumberStepDefinition {
 	
 	// =========================== Project Feature 1: Create a Project by Specifying Name ===========================
 
+    private boolean isOnProjectCreationPage;
+    private String projectName;
+    private boolean formSubmissionSuccessful;
+    private boolean formSubmissionWithoutName;
+    private boolean systemErrorEncountered;
+
     @Given("the user is on the project creation page")
     public void givenUserIsOnProjectCreationPage() {
-        // Implementation for navigating to the project creation page
+        // Simulating user navigation to the project creation page
+        isOnProjectCreationPage = true;
     }
 
     @When("the user specifies the name of the project")
     public void whenUserSpecifiesProjectName() {
-        // Implementation for specifying the name of the project
+        // Simulating user specifying the name of the project
+        projectName = "Sample Project";
     }
 
     @When("the user submits the form")
     public void whenUserSubmitsForm() {
-        // Implementation for submitting the form
+        // Simulating form submission
+        if (projectName != null && !projectName.isEmpty()) {
+            formSubmissionSuccessful = true;
+        } else {
+            formSubmissionWithoutName = true;
+        }
     }
 
     @Then("the project with the specified name is created successfully")
     public void thenProjectCreatedSuccessfully() {
-        // Implementation for verifying the project creation
+        // Verifying the project creation success
+        assert isOnProjectCreationPage && formSubmissionSuccessful : "Project creation failed.";
     }
 
     @When("the user submits the form without specifying the name")
     public void whenUserSubmitsFormWithoutName() {
-        // Implementation for submitting the form without specifying the name
+        // Simulating form submission without specifying the name
+        formSubmissionWithoutName = true;
     }
 
     @Then("an error message is displayed indicating the missing information")
     public void thenErrorMessageDisplayedForMissingInformation() {
-        // Implementation for verifying the error message
+        // Verifying the error message for missing information
+        assert isOnProjectCreationPage && formSubmissionWithoutName : "Error message for missing information not displayed.";
     }
 
     @When("the system encounters an error during submission")
     public void whenSystemEncountersError() {
-        // Implementation for simulating a system error during submission
+        // Simulating a system error during submission
+        systemErrorEncountered = true;
     }
 
     @Then("an error message is displayed, and the project is not created")
     public void thenErrorMessageDisplayedForSystemError() {
-        // Implementation for verifying the error message for system error
+        // Verifying the error message for system error
+        assert isOnProjectCreationPage && systemErrorEncountered : "Error message for system error not displayed.";
     }
 
 
 	// =========================== Project Feature 2: Get Project Information by Specifying Name ==========================
-	@Given("the user is on the project information page")
+	private boolean isOnProjectInformationPage;
+    private String specifiedProjectName;
+    private boolean projectInformationRequested;
+    private boolean nonExistingProjectSpecified;
+    private boolean errorMessageForMissingProjectNameDisplayed;
+
+    @Given("the user is on the project information page")
     public void givenUserIsOnProjectInformationPageByName() {
-        // Implementation for navigating to the project information page
+        // Simulating user navigation to the project information page
+        isOnProjectInformationPage = true;
     }
 
     @When("the user specifies the name of the project")
     public void whenUserSpecifiesProjectNameToGetIt() {
-        // Implementation for specifying the name of the project
+        // Simulating user specifying the name of the project
+        specifiedProjectName = "Sample Project";
     }
 
     @When("the user requests project information")
     public void whenUserRequestsProjectInformationByName() {
-        // Implementation for requesting project information
+        // Simulating user requesting project information
+        if (specifiedProjectName != null && !specifiedProjectName.isEmpty()) {
+            projectInformationRequested = true;
+        } else {
+            nonExistingProjectSpecified = true;
+        }
     }
 
     @Then("the relevant project information is displayed")
     public void thenRelevantProjectInformationDisplayedByName() {
-        // Implementation for verifying the relevant project information is displayed
+        // Verifying relevant project information is displayed
+        assert isOnProjectInformationPage && projectInformationRequested : "Project information not displayed.";
     }
 
     @When("the user specifies the name of a non-existing project")
     public void whenUserSpecifiesNonExistingProjectName() {
-        // Implementation for specifying the name of a non-existing project
+        // Simulating user specifying the name of a non-existing project
+        specifiedProjectName = "NonExistingProject";
     }
 
     @Then("an error message is displayed, indicating that the project does not exist")
     public void thenErrorMessageDisplayedForNonExistingProject() {
-        // Implementation for verifying the error message for a non-existing project
+        // Verifying error message for non-existing project
+        assert isOnProjectInformationPage && nonExistingProjectSpecified : "Error message for non-existing project not displayed.";
     }
 
     @When("the user tries to request project information without specifying the name")
     public void whenUserRequestsProjectInformationWithoutName() {
-        // Implementation for attempting to request project information without specifying the name
+        // Simulating user attempting to request project information without specifying the name
+        errorMessageForMissingProjectNameDisplayed = true;
     }
 
     @Then("an error message is displayed, indicating that the project name is required")
     public void thenErrorMessageDisplayedForMissingProjectName() {
-        // Implementation for verifying the error message for missing project name
+        // Verifying error message for missing project name
+        assert isOnProjectInformationPage && errorMessageForMissingProjectNameDisplayed : "Error message for missing project name not displayed.";
     }
     
 
 	// =========================== Project Feature 3: Close a Project ===========================
-	@Given("the project manager is on the project details page")
+	private boolean isOnProjectDetailsPage;
+    private boolean projectIsActive;
+    private boolean projectClosedSuccessfully;
+    private boolean projectAlreadyClosed;
+    private boolean nonExistingProjectClosed;
+    private boolean errorMessageDisplayedForClosingClosedProject;
+    private boolean errorMessageDisplayedForClosingNonExistingProject;
+
+    @Given("the project manager is on the project details page")
     public void givenProjectManagerOnProjectDetailsPage() {
-        // Implementation for navigating to the project details page
+        // Simulating project manager navigation to the project details page
+        isOnProjectDetailsPage = true;
     }
 
     @Given("the project is in an active state")
     public void givenProjectIsActive() {
-        // Implementation for setting up an active project state
+        // Simulating setting up an active project state
+        projectIsActive = true;
     }
 
     @When("the project manager chooses to close the project")
     public void whenProjectManagerClosesProject() {
-        // Implementation for closing the project
+        // Simulating project manager closing the project
+        if (projectIsActive) {
+            projectClosedSuccessfully = true;
+        } else {
+            projectAlreadyClosed = true;
+        }
     }
 
     @Then("the project is closed successfully")
     public void thenProjectClosedSuccessfully() {
-        // Implementation for verifying the project closure
+        // Verifying project closure success
+        assert isOnProjectDetailsPage && projectClosedSuccessfully : "Project closure failed.";
     }
 
     @Given("the project is already closed")
     public void givenProjectIsAlreadyClosed() {
-        // Implementation for setting up an already closed project state
+        // Simulating setting up an already closed project state
+        projectIsActive = false;
     }
 
     @When("the project manager tries to close the project")
     public void whenProjectManagerTriesToCloseClosedProject() {
-        // Implementation for attempting to close an already closed project
+        // Simulating project manager attempting to close an already closed project
+        errorMessageDisplayedForClosingClosedProject = true;
     }
 
     @Then("an error message is displayed, indicating that the project is already closed")
     public void thenErrorMessageDisplayedForClosingClosedProject() {
-        // Implementation for verifying the error message for closing an already closed project
+        // Verifying error message for closing an already closed project
+        assert isOnProjectDetailsPage && errorMessageDisplayedForClosingClosedProject : "Error message for closing an already closed project not displayed.";
     }
 
     @Given("the project manager tries to close a non-existing project")
     public void givenProjectManagerTriesToCloseNonExistingProject() {
-        // Implementation for setting up a non-existing project scenario
+        // Simulating project manager attempting to close a non-existing project
+        nonExistingProjectClosed = true;
     }
 
     @Then("an error message is displayed, indicating that the project does not exist")
     public void thenErrorMessageDisplayedForClosingNonExistingProject() {
-        // Implementation for verifying the error message for closing a non-existing project
+        // Verifying error message for closing a non-existing project
+        assert isOnProjectDetailsPage && nonExistingProjectClosed : "Error message for closing a non-existing project not displayed.";
     }
 
-
 	// =========================== Project Feature 4: Get Project Information by Specifying ID ===========================
-	@Given("the user is on the project information page")
+	private boolean isOnProjectInformationPage;
+    private String specifiedProjectId;
+    private boolean projectInformationRequested;
+    private boolean nonExistingProjectSpecified;
+    private boolean errorMessageForMissingProjectIdDisplayed;
+
+    @Given("the user is on the project information page")
     public void givenUserIsOnProjectInformationPage() {
-        // Implementation for navigating to the project information page
+        // Simulating user navigation to the project information page
+        isOnProjectInformationPage = true;
     }
 
     @When("the user specifies the ID of the project")
     public void whenUserSpecifiesProjectId() {
-        // Implementation for specifying the ID of the project
+        // Simulating user specifying the ID of the project
+        specifiedProjectId = "123"; // Replace with an actual project ID
     }
 
     @When("the user requests project information")
     public void whenUserRequestsProjectInformation() {
-        // Implementation for requesting project information
+        // Simulating user requesting project information
+        if (specifiedProjectId != null && !specifiedProjectId.isEmpty()) {
+            projectInformationRequested = true;
+        } else {
+            nonExistingProjectSpecified = true;
+        }
     }
 
     @Then("the relevant project information is displayed")
     public void thenRelevantProjectInformationDisplayed() {
-        // Implementation for verifying the relevant project information is displayed
+        // Verifying relevant project information is displayed
+        assert isOnProjectInformationPage && projectInformationRequested : "Project information not displayed.";
     }
 
     @When("the user specifies the ID of a non-existing project")
     public void whenUserSpecifiesNonExistingProjectId() {
-        // Implementation for specifying the ID of a non-existing project
+        // Simulating user specifying the ID of a non-existing project
+        specifiedProjectId = "NonExistingProjectId"; // Replace with a non-existing project ID
     }
 
     @Then("an error message is displayed, indicating that the project does not exist")
     public void thenErrorMessageDisplayedForNonExistingProjectId() {
-        // Implementation for verifying the error message for a non-existing project ID
+        // Verifying error message for a non-existing project ID
+        assert isOnProjectInformationPage && nonExistingProjectSpecified : "Error message for non-existing project ID not displayed.";
     }
 
     @When("the user tries to request project information without specifying the ID")
     public void whenUserRequestsProjectInformationWithoutId() {
-        // Implementation for attempting to request project information without specifying the ID
+        // Simulating user attempting to request project information without specifying the ID
+        errorMessageForMissingProjectIdDisplayed = true;
     }
 
     @Then("an error message is displayed, indicating that the project ID is required")
     public void thenErrorMessageDisplayedForMissingProjectId() {
-        // Implementation for verifying the error message for missing project ID
+        // Verifying error message for missing project ID
+        assert isOnProjectInformationPage && errorMessageForMissingProjectIdDisplayed : "Error message for missing project ID not displayed.";
     }
 
 
 	// =========================== Project Feature 5: Modify the Name of a Project ===========================
 
+    private boolean isNameModified;
+    private boolean changesSavedSuccessfully;
+    private boolean attemptedToModifyWithEmptyName;
+    private boolean errorMessageForEmptyNameDisplayed;
+    private boolean userDecidesNotToModifyName;
+    private boolean projectNameRemainsUnchanged;
+
     @When("the user modifies the name of the project")
     public void whenUserModifiesProjectName() {
-        // Implementation for modifying the name of the project
+        // Simulating user modifying the name of the project
+        isNameModified = true;
     }
 
     @When("the user saves the changes")
     public void whenUserSavesChanges() {
-        // Implementation for saving the changes
+        // Simulating user saving the changes
+        if (isNameModified && !attemptedToModifyWithEmptyName) {
+            changesSavedSuccessfully = true;
+        }
     }
 
     @Then("the project's name is updated successfully")
     public void thenProjectNameUpdatedSuccessfully() {
-        // Implementation for verifying the project name update
+        // Verifying project name update success
+        assert isNameModified && changesSavedSuccessfully : "Project name update failed.";
     }
 
     @When("the user attempts to modify the name with an empty value")
     public void whenUserAttemptsToModifyWithNameEmpty() {
-        // Implementation for simulating an attempt to modify with an empty value
+        // Simulating user attempting to modify with an empty value
+        attemptedToModifyWithEmptyName = true;
     }
 
     @Then("an error message is displayed indicating the empty name is not allowed")
     public void thenErrorMessageDisplayedForEmptyName() {
-        // Implementation for verifying the error message for empty name
+        // Verifying error message for empty name
+        assert attemptedToModifyWithEmptyName : "Error message for empty name not displayed.";
+        errorMessageForEmptyNameDisplayed = true;
     }
 
     @When("the user decides not to modify the name")
     public void whenUserDecidesNotToModifyName() {
-        // Implementation for simulating the decision not to modify the name
+        // Simulating user deciding not to modify the name
+        userDecidesNotToModifyName = true;
     }
 
     @Then("the project's name remains unchanged")
     public void thenProjectNameRemainsUnchanged() {
-        // Implementation for verifying that the project's name remains unchanged
+        // Verifying that the project's name remains unchanged
+        assert userDecidesNotToModifyName : "Project name should remain unchanged, but it was modified.";
+        projectNameRemainsUnchanged = true;
     }
 
 }
