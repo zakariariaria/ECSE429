@@ -372,24 +372,218 @@ public class CucumberStepDefinition {
 	}
 
 	
-	// =========================== Project Feature 1:  ===========================
 
-
-
-	// =========================== Project Feature 2:  ===========================
-
-
-
-	// =========================== Project Feature 3:  ===========================
-
-
-
-	// =========================== Project Feature 4:  ===========================
-
-
-
-	// =========================== Project Feature 5:  ===========================
 
 	
+	// =========================== Project Feature 1: Create a Project by Specifying Name ===========================
+
+    @Given("the user is on the project creation page")
+    public void givenUserIsOnProjectCreationPage() {
+        // Implementation for navigating to the project creation page
+    }
+
+    @When("the user specifies the name of the project")
+    public void whenUserSpecifiesProjectName() {
+        // Implementation for specifying the name of the project
+    }
+
+    @When("the user submits the form")
+    public void whenUserSubmitsForm() {
+        // Implementation for submitting the form
+    }
+
+    @Then("the project with the specified name is created successfully")
+    public void thenProjectCreatedSuccessfully() {
+        // Implementation for verifying the project creation
+    }
+
+    @When("the user submits the form without specifying the name")
+    public void whenUserSubmitsFormWithoutName() {
+        // Implementation for submitting the form without specifying the name
+    }
+
+    @Then("an error message is displayed indicating the missing information")
+    public void thenErrorMessageDisplayedForMissingInformation() {
+        // Implementation for verifying the error message
+    }
+
+    @When("the system encounters an error during submission")
+    public void whenSystemEncountersError() {
+        // Implementation for simulating a system error during submission
+    }
+
+    @Then("an error message is displayed, and the project is not created")
+    public void thenErrorMessageDisplayedForSystemError() {
+        // Implementation for verifying the error message for system error
+    }
+
+
+	// =========================== Project Feature 2: Get Project Information by Specifying Name ==========================
+	@Given("the user is on the project information page")
+    public void givenUserIsOnProjectInformationPageByName() {
+        // Implementation for navigating to the project information page
+    }
+
+    @When("the user specifies the name of the project")
+    public void whenUserSpecifiesProjectNameToGetIt() {
+        // Implementation for specifying the name of the project
+    }
+
+    @When("the user requests project information")
+    public void whenUserRequestsProjectInformationByName() {
+        // Implementation for requesting project information
+    }
+
+    @Then("the relevant project information is displayed")
+    public void thenRelevantProjectInformationDisplayedByName() {
+        // Implementation for verifying the relevant project information is displayed
+    }
+
+    @When("the user specifies the name of a non-existing project")
+    public void whenUserSpecifiesNonExistingProjectName() {
+        // Implementation for specifying the name of a non-existing project
+    }
+
+    @Then("an error message is displayed, indicating that the project does not exist")
+    public void thenErrorMessageDisplayedForNonExistingProject() {
+        // Implementation for verifying the error message for a non-existing project
+    }
+
+    @When("the user tries to request project information without specifying the name")
+    public void whenUserRequestsProjectInformationWithoutName() {
+        // Implementation for attempting to request project information without specifying the name
+    }
+
+    @Then("an error message is displayed, indicating that the project name is required")
+    public void thenErrorMessageDisplayedForMissingProjectName() {
+        // Implementation for verifying the error message for missing project name
+    }
+    
+
+	// =========================== Project Feature 3: Close a Project ===========================
+	@Given("the project manager is on the project details page")
+    public void givenProjectManagerOnProjectDetailsPage() {
+        // Implementation for navigating to the project details page
+    }
+
+    @Given("the project is in an active state")
+    public void givenProjectIsActive() {
+        // Implementation for setting up an active project state
+    }
+
+    @When("the project manager chooses to close the project")
+    public void whenProjectManagerClosesProject() {
+        // Implementation for closing the project
+    }
+
+    @Then("the project is closed successfully")
+    public void thenProjectClosedSuccessfully() {
+        // Implementation for verifying the project closure
+    }
+
+    @Given("the project is already closed")
+    public void givenProjectIsAlreadyClosed() {
+        // Implementation for setting up an already closed project state
+    }
+
+    @When("the project manager tries to close the project")
+    public void whenProjectManagerTriesToCloseClosedProject() {
+        // Implementation for attempting to close an already closed project
+    }
+
+    @Then("an error message is displayed, indicating that the project is already closed")
+    public void thenErrorMessageDisplayedForClosingClosedProject() {
+        // Implementation for verifying the error message for closing an already closed project
+    }
+
+    @Given("the project manager tries to close a non-existing project")
+    public void givenProjectManagerTriesToCloseNonExistingProject() {
+        // Implementation for setting up a non-existing project scenario
+    }
+
+    @Then("an error message is displayed, indicating that the project does not exist")
+    public void thenErrorMessageDisplayedForClosingNonExistingProject() {
+        // Implementation for verifying the error message for closing a non-existing project
+    }
+
+
+	// =========================== Project Feature 4: Get Project Information by Specifying ID ===========================
+	@Given("the user is on the project information page")
+    public void givenUserIsOnProjectInformationPage() {
+        // Implementation for navigating to the project information page
+    }
+
+    @When("the user specifies the ID of the project")
+    public void whenUserSpecifiesProjectId() {
+        // Implementation for specifying the ID of the project
+    }
+
+    @When("the user requests project information")
+    public void whenUserRequestsProjectInformation() {
+        // Implementation for requesting project information
+    }
+
+    @Then("the relevant project information is displayed")
+    public void thenRelevantProjectInformationDisplayed() {
+        // Implementation for verifying the relevant project information is displayed
+    }
+
+    @When("the user specifies the ID of a non-existing project")
+    public void whenUserSpecifiesNonExistingProjectId() {
+        // Implementation for specifying the ID of a non-existing project
+    }
+
+    @Then("an error message is displayed, indicating that the project does not exist")
+    public void thenErrorMessageDisplayedForNonExistingProjectId() {
+        // Implementation for verifying the error message for a non-existing project ID
+    }
+
+    @When("the user tries to request project information without specifying the ID")
+    public void whenUserRequestsProjectInformationWithoutId() {
+        // Implementation for attempting to request project information without specifying the ID
+    }
+
+    @Then("an error message is displayed, indicating that the project ID is required")
+    public void thenErrorMessageDisplayedForMissingProjectId() {
+        // Implementation for verifying the error message for missing project ID
+    }
+
+
+	// =========================== Project Feature 5: Modify the Name of a Project ===========================
+
+    @When("the user modifies the name of the project")
+    public void whenUserModifiesProjectName() {
+        // Implementation for modifying the name of the project
+    }
+
+    @When("the user saves the changes")
+    public void whenUserSavesChanges() {
+        // Implementation for saving the changes
+    }
+
+    @Then("the project's name is updated successfully")
+    public void thenProjectNameUpdatedSuccessfully() {
+        // Implementation for verifying the project name update
+    }
+
+    @When("the user attempts to modify the name with an empty value")
+    public void whenUserAttemptsToModifyWithNameEmpty() {
+        // Implementation for simulating an attempt to modify with an empty value
+    }
+
+    @Then("an error message is displayed indicating the empty name is not allowed")
+    public void thenErrorMessageDisplayedForEmptyName() {
+        // Implementation for verifying the error message for empty name
+    }
+
+    @When("the user decides not to modify the name")
+    public void whenUserDecidesNotToModifyName() {
+        // Implementation for simulating the decision not to modify the name
+    }
+
+    @Then("the project's name remains unchanged")
+    public void thenProjectNameRemainsUnchanged() {
+        // Implementation for verifying that the project's name remains unchanged
+    }
 
 }
