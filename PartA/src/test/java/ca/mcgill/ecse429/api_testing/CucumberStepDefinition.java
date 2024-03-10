@@ -9,8 +9,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.runner.Request;
 import org.junit.runner.RunWith;
 
 import io.cucumber.java.en.Given;
@@ -371,6 +374,97 @@ public class CucumberStepDefinition {
 	        .post("http://localhost:4567/todos/" + this.id + "/categories");
 	}
 
-	
+	// =========================== Feature : Delete Category Project Relationship ===========================
+
+    @Given("a category with id {string}")
+    public void a_category_with_id(String myid) {
+        this.response = given()
+            .contentType(ContentType.JSON)
+            .when()
+            .get("http://localhost:4567/categories/" + myid);
+        assertEquals(200, response.getStatusCode());
+
+        JsonPath jsonResponse = response.jsonPath();
+        JSONObject category = jsonResponse.getJsonObject("categories[0]");
+        String id = (String) category.get("id");
+        assertEquals(myid, id);
+    }
+
+    @Given("a todo with id {string}")
+    public void a_todo_with_id(String myid) {
+        this.response = given()
+            .contentType(ContentType.JSON)
+            .when()
+            .get("http://localhost:4567/todos/" + myid);
+        assertEquals(200, response.getStatusCode());
+
+        JsonPath jsonResponse = response.jsonPath();
+        JSONObject todo = jsonResponse.getJsonObject("todos[0]");
+        String id = (String) todo.get("id");
+        assertEquals(myid, id);
+    }
+
+    @Given("a project with id {string}")
+    public void a_project_with_id(String myid) {
+        this.response = given()
+            .contentType(ContentType.JSON)
+            .when()
+            .get("http://localhost:4567/projects/" + myid);
+        assertEquals(200, response.getStatusCode());
+
+        JsonPath jsonResponse = response.jsonPath();
+        JSONObject project = jsonResponse.getJsonObject("projects[0]");
+        String id = (String) project.get("id");
+        assertEquals(myid, id);
+    }
+
+    @When("I create project with title {string} for category with id {string} with status {string}")
+    public void i_create_project_title_for_category(String title, String id, String aStatus) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("title", title);
+
+        this.response = given()
+            .contentType(ContentType.JSON)
+            .body(jsonObject.toJSONString())
+            .when()
+            .post("http://localhost:4567/categories/" + id + "/projects");
+        assertEquals(Integer.parseInt(aStatus), response.getStatusCode());
+        if (Integer.parseInt(aStatus) == 201) {
+            assertEquals("Created", response.getStatusLine());
+        }
+    }
+
+    @When("I create relationship categories with title {string} for project with id {string}")
+    public void i_create_categories_relationship_for_project(String title, String id) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("title", title);
+
+        this.response = given()
+            .contentType(ContentType.JSON)
+            .body(jsonObject.toJSONString())
+            .when()
+            .post("http://localhost:4567/projects/" + id + "/categories");
+        assertEquals(201, response.getStatusCode());
+        assertEquals("Created", response.getStatusLine());
+    }
+
+    @Then("I delete category {string} and project {string} relationship with status {string}")
+    public void i_delete_todo_category_rel(String id1, String id2, String aStatus) {
+        this.response = given()
+            .when()
+            .delete("http://localhost:4567/categories/" + id1 + "/projects/" + id2);
+        assertEquals(Integer.parseInt(aStatus), response.getStatusCode());
+    }
+
+    @Then("there is no project for category {string}")
+    public void rel_between_todo_category_does_not_exist(String id1) {
+        this.response = given()
+            .contentType(ContentType.JSON)
+            .when()
+            .get("http://localhost:4567/categories/" + id1 + "/projects");
+        
+        JsonPath jsonResponse = response.jsonPath();
+        assertEquals(0, jsonResponse.getList("projects").size());
+    }
 
 }

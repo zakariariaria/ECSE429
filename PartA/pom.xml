@@ -67,6 +67,12 @@
     <scope>test</scope>
 </dependency>
 
+  
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk-core</artifactId>
+      <version>1.11.615</version>
+    </dependency>
   </dependencies>
 
   <build>
