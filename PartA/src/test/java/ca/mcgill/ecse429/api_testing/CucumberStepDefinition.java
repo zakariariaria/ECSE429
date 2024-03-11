@@ -1,6 +1,7 @@
 package ca.mcgill.ecse429.api_testing;
 
 import static io.restassured.RestAssured.given;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -458,5 +459,122 @@ public class CucumberStepDefinition {
 				.body(requestBody.toString())
 				.when()
 				.post("http://localhost:4567/categories/"+this.categoryId);
+	}
+
+	@When("a request is sent to delete this category")
+	public void aRequestIsSentToDeleteThisCategory() {
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.when()
+				.delete("http://localhost:4567/categories/"+this.categoryId);
+	}
+
+	@When("a request is sent to delete a category with id {string}")
+	public void aRequestIsSentToDeleteACategoryWithId(String id) {
+		this.categoryId=id;
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.when()
+				.delete("http://localhost:4567/categories/"+this.categoryId);
+
+	}
+
+	@Given("the todo item with title {string} is associated with the category")
+	public void theTodoItemWithTitleIsAssociatedWithTheCategory(String title) {
+		JSONObject requestBody = new JSONObject();
+		requestBody.put("title", title);
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.body(requestBody.toString())
+				.when()
+				.post("http://localhost:4567/categories/"+this.categoryId+"/todos");
+	}
+
+	@When("a request is sent to get the todos associated with the category")
+	public void aRequestIsSentToGetTheTodosAssociatedWithTheCategory() {
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.when()
+				.get("http://localhost:4567/categories/"+this.categoryId+"/todos");
+	}
+
+	@When("a request is sent to get the todos with title{string} associated with the category")
+	public void aRequestIsSentToGetTheTodosWithTitleAssociatedWithTheCategory(String title) {
+
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.when()
+				.get("http://localhost:4567/categories/"+this.categoryId+"/todos"+this.id);
+	}
+
+	//Bugs found:
+	@And("the response body should contain a todo item with title {string}")
+	public void theResponseBodyShouldContainATodoItemWithTitle(String title) {
+		JsonPath JsonResponse=this.response.jsonPath();
+		assertEquals(title,JsonResponse.get("title"));
+	}
+
+	@When("a request is sent to delete this category without specifying its id")
+	public void aRequestIsSentToDeleteThisCategoryWithoutSpecifyingItsId() {
+
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.when()
+				.delete("http://localhost:4567/categories/");
+	}
+
+	@And("the response body should contain an empty list of todo items")
+	public void theResponseBodyShouldContainAEmptyListOfTodoItems() {
+		assertNotNull(response);
+		int size = response.jsonPath().getList("todos").size();
+		assertEquals(0,size);
+	}
+
+	@Given("the category with title {string} is associated with the todo")
+	public void theCategoryWithTitleIsAssociatedWithTheTodo(String title) {
+		JSONObject requestBody = new JSONObject();
+		requestBody.put("title", title);
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.body(requestBody.toString())
+				.when()
+				.post("http://localhost:4567/todos/"+this.id+"/categories");
+		this.categoryId=response.jsonPath().get("id");
+	}
+
+	@When("a request is sent to delete the category with title {string} associated with the todo using the id")
+	public void aRequestIsSentToDeleteTheCategoryWithTitleAssociatedWithTheTodo(String title) {
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.when()
+				.delete("http://localhost:4567/todos/"+this.id+"/categories/"+this.categoryId);
+	}
+
+	@When("a request is sent to delete the category with title {string} associated with the todo using both the id and title")
+	public void aRequestIsSentToDeleteTheCategoryWithTitleAssociatedWithTheTodoUsingBothTheIdAndTitle(String title) {
+		JSONObject requestBody = new JSONObject();
+		requestBody.put("title", title);
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.body(requestBody.toString())
+				.when()
+				.delete("http://localhost:4567/todos/"+this.id+"/categories/"+this.categoryId);
+	}
+
+	@When("a request is sent to delete the category with title {string} associated with the todo without specifying the id")
+	public void aRequestIsSentToDeleteTheCategoryWithTitleAssociatedWithTheTodoWithoutSpecifyingTheId(String title) {
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.when()
+				.delete("http://localhost:4567/todos/"+this.id+"/categories/");
+	}
+
+	@When("a request is sent to get the todos with title{string} using a invalid category id {string}")
+	public void aRequestIsSentToGetTheTodosWithTitleUsingAInvalidCategoryId(String title, String id) {
+		this.categoryId=id;
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.when()
+				.get("http://localhost:4567/todos/"+this.id+"/categories/"+this.categoryId);
 	}
 }
