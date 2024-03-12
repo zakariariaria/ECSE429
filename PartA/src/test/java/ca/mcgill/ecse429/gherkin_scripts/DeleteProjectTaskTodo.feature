@@ -1,25 +1,16 @@
-Feature: Delete task relationship between project and todo
-    # As a user, I want to delete a relationship between a project and todo (named tasks), to better represent the relationships of todos.
+#As a user, I want to delete a project with specifying an ID, so that I remove associate todos with projects quickly.
+Feature: Delete a project
 
-    # Normal Flow
-    Scenario: Delete task relationship between project and todo
-        Given a todo item exists with title "todoTitle"
+    Scenario: Successfully deleting a specific category with id
         Given a project exists with title "projectTitle"
-        When I send a request to create an association between the project to task
-        When I delete project "projectTitle" and todo "todoTitle" relationship
+        When a request is sent to delete this project
         Then the response should contain a 200 status code
 
-    # Alternate flow (title with special character)
-    Scenario: Delete task relationship between project and todo with existing todo but no relationship
-        Given a todo item exists with title "todo#!Title"
-        Given a project exists with title "projectTitle"
-        When I send a request to create an association between the project to todo
-        When I delete project "projectTitle" and todo "todo#!Title" relationship
-        Then the response should contain a 200 status code
+    Scenario: Deleting a category  without specifying id
+        Given a category exists with title "projectTitle"
+        When a request is sent to delete this project without specifying its id
+        Then the response should contain a 404 status code
 
-    # Error Flow
-    Scenario: Delete task relationship between project and todo with invalid ID
-        Given a todo item exists with title "todo#!Title"
-        Given a project exists with title "projectTitle"
-        When I delete project "projectTitle" and todo "todo#!Title" relationship
+    Scenario: Deleting a category with a non-existent id
+        When a request is sent to delete a project with id "999"
         Then the response should contain a 404 status code

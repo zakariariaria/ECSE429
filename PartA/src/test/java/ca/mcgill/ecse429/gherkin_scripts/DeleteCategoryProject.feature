@@ -1,4 +1,4 @@
-Feature: Delete Todo Category Relationship
+Feature: Delete Category Project Relationship
     # As a user, I want to delete a category to project relationship to be able to reorganize my todos.
 
     # Normal Flow

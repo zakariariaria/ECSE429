@@ -7,7 +7,7 @@ Feature: Categorize Todos
     Then the category "Home" should be successfully associated with the todo item
     
 	Scenario: Associating an existing category with a todo item
-		Given a category exists with title "Work"
+      Given a category exists with title "Work"
     Given a todo item exists with title "Todo Categories 2"
     When I send a request to create a associate the category with the todo
     Then the category "Work" should be successfully associated with the todo item
