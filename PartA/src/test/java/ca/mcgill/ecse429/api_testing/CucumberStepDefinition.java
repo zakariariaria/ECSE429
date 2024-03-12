@@ -462,7 +462,7 @@ public class CucumberStepDefinition {
 		assertEquals(Integer.parseInt(status), response.getStatusCode());
 	}
 
-	@Then("deteled relationship for todo {string} and project does not exist")
+	@Then("deleted relationship for todo {string} and project does not exist")
 	public void no_relationship_between_todo_and_project(String id1) {
         this.response = given()
             .contentType(ContentType.JSON)
@@ -471,20 +471,6 @@ public class CucumberStepDefinition {
 
 		JsonPath jsonResponse = response.jsonPath();
 		assertEquals(0,jsonResponse.getList("projects").size());
-	}
-
-	@Then("verify project with title {string} exists under category {string}")
-	public void project_title_exists_category(String thetitle, String theid) {
-		this.response = given()
-			.contentType(ContentType.JSON)
-			.when()
-			.get("http://localhost:4567/categories/" + theid + "/projects");
-		assertEquals(200, response.getStatusCode());
-        
-		JsonPath jsonResponse = response.jsonPath();
-        JSONObject category = jsonResponse.getJsonObject("categories[0]");
-        String title = (String) category.get("title");
-        assertEquals(thetitle, title);
 	}
 
 	// =========================== Feature : Delete Project Category Relationship ===========================
@@ -548,4 +534,21 @@ public class CucumberStepDefinition {
 		String id = (String) todo.get("id");
 		assertNotEquals(theid, id);
 	}
+
+	// =========================== Feature : View Projects for Category ===========================
+
+	@Then("verify project with title {string} exists under category {string}")
+	public void project_title_exists_category(String thetitle, String theid) {
+		this.response = given()
+			.contentType(ContentType.JSON)
+			.when()
+			.get("http://localhost:4567/categories/" + theid + "/projects");
+		assertEquals(200, response.getStatusCode());
+		
+		JsonPath jsonResponse = response.jsonPath();
+		JSONObject category = jsonResponse.getJsonObject("categories[0]");
+		String title = (String) category.get("title");
+		assertEquals(thetitle, title);
+	}
+
 }

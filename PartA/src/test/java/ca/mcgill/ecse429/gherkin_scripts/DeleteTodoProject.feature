@@ -12,7 +12,7 @@ Feature: Delete Todo Project relationship
         | 1       | 1          | 200    |
         | 2       | 1          | 200    |
 
-    # Alternate Flow (malformed request despite being a string)
+    # Alternate Flow 
     Scenario Outline: Delete todo and projects relationship with an incorrect ID
         Given a project with id "<project_id>"
         When I delete relationship between todo "<todo_id>" and project "<project_id>" with status "<status>"
@@ -20,10 +20,10 @@ Feature: Delete Todo Project relationship
         | todo_id   | project_id | status |
         | #-#       | 1          | 404    |
 
-    # Error Flow with a project that does not exist
+    # Error Flow (with a project that does not exist)
     Scenario Outline: Delete todo and projects relationship with non-existing project
         Given a project with id "<project_id>"
         When I delete relationship between todo "<todo_id>" and project "<project_id>" with status "<status>"
         Examples:
         | todo_id | project_id | status |
-        | 3       | 1          | 400    |
+        | 3       |            | 404    |
