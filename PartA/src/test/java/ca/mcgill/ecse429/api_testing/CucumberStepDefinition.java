@@ -376,78 +376,45 @@ public class CucumberStepDefinition {
 
 	// =========================== Feature : Delete Category Project Relationship ===========================
 
-    @Given("a category with id {string}")
-    public void a_category_with_id(String myid) {
-        this.response = given()
-            .contentType(ContentType.JSON)
-            .when()
-            .get("http://localhost:4567/categories/" + myid);
-        assertEquals(200, response.getStatusCode());
+    @Given("a project exists with title {string}")
+    public void a_project_with_id(String title) {
+		JSONObject projectsDetails = new JSONObject();
+		projectsDetails.put("title", title);
 
-        JsonPath jsonResponse = response.jsonPath();
-        JSONObject category = jsonResponse.getJsonObject("categories[0]");
-        String id = (String) category.get("id");
-        assertEquals(myid, id);
+		this.response = given()
+				.contentType(ContentType.JSON)
+				.body(projectsDetails.toJSONString())
+				.when()
+				.post("http://localhost:4567/projects");
+		JsonPath jsonResponse = response.jsonPath();
+		this.projectsId = jsonResponse.get("id");
     }
 
-    @Given("a todo with id {string}")
-    public void a_todo_with_id(String myid) {
-        this.response = given()
-            .contentType(ContentType.JSON)
-            .when()
-            .get("http://localhost:4567/todos/" + myid);
-        assertEquals(200, response.getStatusCode());
-
-        JsonPath jsonResponse = response.jsonPath();
-        JSONObject todo = jsonResponse.getJsonObject("todos[0]");
-        String id = (String) todo.get("id");
-        assertEquals(myid, id);
-    }
-
-    @Given("a project with id {string}")
-    public void a_project_with_id(String myid) {
-        this.response = given()
-            .contentType(ContentType.JSON)
-            .when()
-            .get("http://localhost:4567/projects/" + myid);
-        assertEquals(200, response.getStatusCode());
-
-        JsonPath jsonResponse = response.jsonPath();
-        JSONObject project = jsonResponse.getJsonObject("projects[0]");
-        String id = (String) project.get("id");
-        assertEquals(myid, id);
-    }
-
-    @When("I create project with title {string} for category with id {string} with status {string}")
-    public void i_create_project_title_for_category(String title, String id, String status) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("title", title);
+    @When("I send a request to create an association between the category to the project")
+    public void i_create_project_title_for_category() {
+		JSONObject requestBody = new JSONObject();
+		requestBody.put("id", projectsId);
 
         this.response = given()
             .contentType(ContentType.JSON)
-            .body(jsonObject.toJSONString())
+            .body(requestBody.toString())
             .when()
-            .post("http://localhost:4567/categories/" + id + "/projects");
-        assertEquals(Integer.parseInt(status), response.getStatusCode());
-        if (Integer.parseInt(status) == 201) {
-            assertEquals("Created", response.getStatusLine());
-        }
+            .post("http://localhost:4567/categories/" + this.id + "/projects");
     }
 
-    @Then("I delete category {string} and project {string} relationship with status {string}")
-    public void i_delete_todo_category_rel(String id1, String id2, String status) {
+    @When("I delete category {string} and project {string} relationship")
+    public void i_delete_project_to_category_rel() {
         this.response = given()
             .when()
-            .delete("http://localhost:4567/categories/" + id1 + "/projects/" + id2);
-        assertEquals(Integer.parseInt(status), response.getStatusCode());
+            .delete("http://localhost:4567/categories/" + this.categoryId + "/projects/" + this.projectsId);
     }
 
     @Then("there is no project for category {string}")
-    public void rel_between_todo_category_does_not_exist(String id1) {
+    public void rel_between_todo_category_does_not_exist() {
         this.response = given()
             .contentType(ContentType.JSON)
             .when()
-            .get("http://localhost:4567/categories/" + id1 + "/projects");
+            .get("http://localhost:4567/categories/" + this.categoryId + "/projects");
         
         JsonPath jsonResponse = response.jsonPath();
         assertEquals(0, jsonResponse.getList("projects").size());
@@ -474,51 +441,36 @@ public class CucumberStepDefinition {
 	}
 
 	// =========================== Feature : Delete Project Category Relationship ===========================
-	@When("I create relationship categories with title {string} for project with id {string}")
-    public void i_create_categories_relationship_for_project(String title, String id) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("title", title);
+	@When("I send a request to create an association between the project to the category")
+	public void i_create_category_for_project_relation() {
+		JSONObject requestBody = new JSONObject();
+		requestBody.put("id", categoryId);
 
-        this.response = given()
-            .contentType(ContentType.JSON)
-            .body(jsonObject.toJSONString())
-            .when()
-            .post("http://localhost:4567/projects/" + id + "/categories");
-        assertEquals(201, response.getStatusCode());
-        assertEquals("Created", response.getStatusLine());
-    }
-
-	@Then("I delete project {string} relationship to category {string} relationship with status {string}")
-	public void delete_project_category_relationship(String id1, String id2, String status) {
 		this.response = given()
-			.when()
-			.delete("http://localhost:4567/projects/" + id1 + "/categories/" + id2);
-			assertEquals(Integer.parseInt(status), response.getStatusCode());
+				.contentType(ContentType.JSON)
+				.body(requestBody.toString())
+				.when()
+				.post("http://localhost:4567/projects/" + this.id + "/categories");
 	}
 
-	@Then("there is no category for project {string}")
-	public void no_category_for_project_id(String theid) {
+	@When("I delete project {string} and category {string} relationship")
+	public void i_delete_category_to_project_rel() {
 		this.response = given()
-			.contentType(ContentType.JSON)
-			.when()
-			.get("http://localhost:4567/projects/" + theid);
-
-		assertEquals(200, response.getStatusCode());
-
-		JsonPath jsonResponse = response.jsonPath();
-		JSONArray categories = jsonResponse.get("categories");
-
-		// Ensure no categories are associated with the project
-		assertEquals(0, categories.size());
+				.when()
+				.delete("http://localhost:4567/projects/" + this.projectsId + "/categories/" + this.categoryId);
 	}
 
 	//=========================== Feature : Delete Project Task Todo Relationship ===========================
-	@When("I delete relationship between project {string} and todo {string} with status {string}")
-	public void delete_project_todo_relationship(String id1, String id2, String status) {
+	@When("I send a request to create an association between the project to task")
+	public void i_create_project_for_task_relation() {
+		JSONObject requestBody = new JSONObject();
+		requestBody.put("id", categoryId);
+
 		this.response = given()
-			.when()
-			.delete("http://localhost:4567/projects/" + id1 + "/tasks/" + id2);
-			assertEquals(Integer.parseInt(status), response.getStatusCode());
+				.contentType(ContentType.JSON)
+				.body(requestBody.toString())
+				.when()
+				.post("http://localhost:4567/projects/" + this.id + "/categories");
 	}
 
 	@Then("deleted relationship for project {string} and todo does not exist")

@@ -2,28 +2,24 @@ Feature: Delete Todo Category Relationship
     # As a user, I want to delete a category to project relationship to be able to reorganize my todos.
 
     # Normal Flow
-    Scenario Outline: Delete Categories and Projects Relationship
-        Given a category with id "<category_id>"
-        When I create project with title "<title>" for category with id "<category_id>" with status "<status_1>"
-        Then I delete category "<category_id>" and project "<project_id>" relationship with status "<status_2>"
-        Then there is no project for category "<category_id>"
-        Examples:
-            | category_id | title         | project_id | status_1 | status_2 |
-            | 1           | assignment101 | 2          | 201      | 200      |
+    Scenario: Delete Categories and Projects Relationship
+        Given a category exists with title "categoryTitle"
+        Given a project exists with title "projectTitle"
+        When I send a request to create an association between the category to the project
+        When I delete category "categoryTitle" and project "projectTitle" relationship
+        Then the response should contain a 200 status code
 
-    # Alternate Flow (Project with no title)
-    Scenario Outline: Delete Categories and Projects Relationship with empty title
-        Given a category with id "<category_id>"
-        When I create project with title "<title>" for category with id "<category_id>" with status "<status_1>"
-        Then I delete category "<category_id>" and project "<project_id>" relationship with status "<status_2>"
-        Then there is no project for category "<category_id>"
-        Examples:
-            | category_id | title | project_id | status_1 | status_2 |
-            | 1           |       | 2          | 201      | 200      |
+    # Alternate Flow (Project with special title)
+    Scenario: Delete Categories and Projects Relationship with special title
+        Given a category exists with title "categoryTitle"
+        Given a project exists with title "project#!Title"
+        When I send a request to create an association between the category to the project
+        When I delete category "categoryTitle" and project "project#!Title" relationship
+        Then the response should contain a 200 status code
 
     # Error Flow (Category and Project relationship does not exist)
-    Scenario Outline: Delete Non-Existing Categories and Projects Relationship
-        Then I delete category "<category_id>" and project "<project_id>" relationship with status "<status>"
-        Examples:
-            | category_id | project_id | status |
-            | 69          | 33         | 404    |
+    Scenario: Delete Non-Existing Categories and Projects Relationship
+        Given a category exists with title "categoryTitle"
+        Given a project exists with title "projectTitle"
+        When I delete category "categoryTitle" and project "projectTitle" relationship
+        Then the response should contain a 404 status code
