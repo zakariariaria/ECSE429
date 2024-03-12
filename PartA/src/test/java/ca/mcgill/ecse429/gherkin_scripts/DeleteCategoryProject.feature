@@ -4,7 +4,7 @@ Feature: Delete Todo Category Relationship
     # Normal Flow
     Scenario Outline: Delete Categories and Projects Relationship
         Given a category with id "<category_id>"
-        When I create project with title "<title>" for category with id "<category_id>" with statys "<status_1>"
+        When I create project with title "<title>" for category with id "<category_id>" with status "<status_1>"
         Then I delete category "<category_id>" and project "<project_id>" relationship with status "<status_2>"
         Then there is no project for category "<category_id>"
         Examples:
@@ -15,7 +15,7 @@ Feature: Delete Todo Category Relationship
     # Alternate Flow (Project with no title)
     Scenario Outline: Delete Categories and Projects Relationship wiht empty title
         Given a category with id "<category_id>"
-        When I create project with title "<title>" for category with id "<category_id>" with statys "<status_1>"
+        When I create project with title "<title>" for category with id "<category_id>" with status "<status_1>"
         Then I delete category "<category_id>" and project "<project_id>" relationship with status "<status_2>"
         Then there is no project for category "<category_id>"
         Examples:
