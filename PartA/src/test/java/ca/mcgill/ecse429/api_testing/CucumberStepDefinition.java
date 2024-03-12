@@ -434,20 +434,6 @@ public class CucumberStepDefinition {
         }
     }
 
-    @When("I create relationship categories with title {string} for project with id {string}")
-    public void i_create_categories_relationship_for_project(String title, String id) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("title", title);
-
-        this.response = given()
-            .contentType(ContentType.JSON)
-            .body(jsonObject.toJSONString())
-            .when()
-            .post("http://localhost:4567/projects/" + id + "/categories");
-        assertEquals(201, response.getStatusCode());
-        assertEquals("Created", response.getStatusLine());
-    }
-
     @Then("I delete category {string} and project {string} relationship with status {string}")
     public void i_delete_todo_category_rel(String id1, String id2, String status) {
         this.response = given()
@@ -502,6 +488,20 @@ public class CucumberStepDefinition {
 	}
 
 	// =========================== Feature : Delete Project Category Relationship ===========================
+	@When("I create relationship categories with title {string} for project with id {string}")
+    public void i_create_categories_relationship_for_project(String title, String id) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("title", title);
+
+        this.response = given()
+            .contentType(ContentType.JSON)
+            .body(jsonObject.toJSONString())
+            .when()
+            .post("http://localhost:4567/projects/" + id + "/categories");
+        assertEquals(201, response.getStatusCode());
+        assertEquals("Created", response.getStatusLine());
+    }
+
 	@Then("I delete project {string} relationship to category {string} relationship with status {string}")
 	public void delete_project_category_relationship(String id1, String id2, String status) {
 		this.response = given()
