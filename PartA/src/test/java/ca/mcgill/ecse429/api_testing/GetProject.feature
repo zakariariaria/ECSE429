@@ -1,19 +1,17 @@
 #As a user, I want to be able to retrieve Project Information by specifying its name to get all the information of a project at once.
 Feature: Get a project 
 
-  Scenario: Successful retrieval of project information by specifying its name
-    Given the user is on the project information page
-    When the user specifies the name of the project
-    And the user requests project information
-    Then the relevant project information is displayed
+  Scenario: Successful retrieval of all projects
+   	When a request is sent to get all projects
+  	Then the response should contain a 200 status code
+    And the response body should contain a list of projects
 
-  Scenario: Alternative scenario - Project with specified name does not exist
-    Given the user is on the project information page
-    When the user specifies the name of a non-existing project
-    And the user requests project information
-    Then an error message is displayed, indicating that the project does not exist
+  Scenario: Successfully getting a specific project 
+  	When a request is sent to get a project with id "1"
+    Then the response should contain a 200 status code
+    And the response body should contain a project with "Office work" and ""
 
-  Scenario: Unsuccessful retrieval of project information without specifying a name
-    Given the user is on the project information page
-    When the user tries to request project information without specifying the name
-    Then an error message is displayed, indicating that the project name is required
+  Scenario: Getting a todo item with a non-existant id
+    When a request is sent to get a todo item with id "999"
+    Then the response should contain a 404 status code
+    

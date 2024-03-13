@@ -821,12 +821,39 @@ public class CucumberStepDefinition {
 	
 	// =========================== Project Feature 1: Create a Project by Specifying Name ===========================
 
-    
-    
- 
+	@When("a request is sent to get all projects")
+	public void a_request_is_sent_to_get_all_projects() {
+		this.response = given()
+				.contentType(ContentType.JSON)
+				.when()
+				.get("http://localhost:4567/projects");
+	}
 
-  
+	@Then("the response body should contain a list of projects")
+	public void the_response_body_should_contain_a_list_of_projects() {
+		assertNotNull(this.response.getBody());
+	}
 
+	@When("a request is sent to get a project with id {string}")
+	public void a_request_is_sent_to_get_a_project_with_id(String id) {
+		this.response = given()
+				.contentType(ContentType.JSON)
+				.when()
+				.get("http://localhost:4567/todos/"+id);
+	}
+
+	// BUG FOUND : CANNOT GET A PROJECT WITH AN EXISTING ID
+	@Then("the response body should contain a project with {string} and {string}")
+	public void the_response_body_should_contain_a_project_with_and(String title, String description) {
+		JsonPath jsonResponse = response.jsonPath();
+		String titleObject = jsonResponse.get("projects[0].title");
+		String descObject = jsonResponse.get("projects[0].title");
+		
+	    assertEquals(title,titleObject);
+	    assertEquals(description, descObject);
+	    assertEquals(Boolean.parseBoolean(doneStatus), Boolean.parseBoolean((String) jsonResponse.get("todos[0].doneStatus")));
+	}
+    
 
 	
 	
