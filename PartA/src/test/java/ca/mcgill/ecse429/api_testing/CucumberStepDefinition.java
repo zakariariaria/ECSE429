@@ -437,10 +437,10 @@ public class CucumberStepDefinition {
 
 
 	// =========================== Project Feature 2: Get Project Information by Specifying Name ==========================
-	private boolean isOnProjectInformationPage;
+	//private boolean isOnProjectInformationPage;
     private String specifiedProjectName;
-    private boolean projectInformationRequested;
-    private boolean nonExistingProjectSpecified;
+    //private boolean projectInformationRequested;
+    //private boolean nonExistingProjectSpecified;
     private boolean errorMessageForMissingProjectNameDisplayed;
 
     @Given("the user is on the project information page")
