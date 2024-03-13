@@ -36,6 +36,7 @@ public class CucumberStepDefinition {
     private String projectsId;
     private String tasksoffId;
     private String categoryId;
+    private String completed;
  
 	
 	// BUG FOUND : WHEN CREATING A TODO ITEM, ADDING A DONESTATUS RESULTS IN 400 ERROR 
@@ -856,7 +857,6 @@ public class CucumberStepDefinition {
 	
 	// =========================== Project Feature 2: Create a Project by Specifying Name ===========================
 	
-	// BUG FOUND: CREATING A PROJECT AND SPECIFYING ITS DESCRIPTION RESULTS IN A NULL OBJECT
 	@When("a request is sent to create a new project item with title {string} and description {string}")
 	public void a_request_is_sent_to_create_a_new_project_item_with_title_and_description(String title, String description) {
 		this.title = title;
@@ -917,10 +917,112 @@ public class CucumberStepDefinition {
 							.when()
 							.post("http://localhost:4567/todos");
 	}
+	
+	// =========================== Project Feature 3: Get category ===========================
+	@When("a request is sent to get all categories")
+    public void a_request_is_sent_to_get_all_categories() {
+        this.response = given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("http://localhost:4567/categories");
+    }
+
+    @Then("the response body should contain a list of categories")
+    public void the_response_body_should_contain_a_list_of_categories() {
+        assertNotNull(this.response.getBody());
+    }
     
+    @When("a request is sent to get a category with id {string}")
+    public void a_request_is_sent_to_get_a_category_with_id(String id) {
+        this.response = given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("http://localhost:4567/todos/"+id);
+    }
+    
+    
+ // =========================== Project Feature 4: Update project ===========================
+    
+    @Given("a project item exists with title {string}")
+    public void a_project_item_exists_with_title(String title) {
+    	this.title = title;
+       
+        
+        
+        JSONObject object = new JSONObject();
+        object.put("title", title);
+   
+        this.response = given()
+                        .contentType(ContentType.JSON)
+                        .body(object.toJSONString())
+                        .when()
+                        .post("http://localhost:4567/todos");
+        JsonPath jsonResponse = response.jsonPath();
+        this.id = jsonResponse.get("id");
+    }
+    
+    //BUG FOUND: CAN'T UPDATE PROJECT
+    @When("a request is sent to update the fields of the project item to title {string} and description {string} and completed {string}")
+    public void a_request_is_sent_to_update_the_fields_of_the_project_item_to_title_and_description_and_completed(String title, String description, String completed) {
+    	this.title = title;
+        this.description = description;
+        this.completed = completed;
+        
+        
+        JSONObject object = new JSONObject();
+        object.put("title", title);
+        object.put("description", description);
+        object.put("completed", "true");
+        
+        
+        this.response = given()
+                        .contentType(ContentType.JSON)
+                        .body(object.toJSONString())
+                        .when()
+                        .put("http://localhost:4567/projects/"+this.id);
+    }
+    
+    //BUG FOUND: CAN'T UPDATE PROJECT
+    @When("a request is sent to update the title of the project to {string}")
+    public void a_request_is_sent_to_update_the_title_of_the_project_to(String title) {
+    	this.title = title;
+        
+        
+        
+        JSONObject object = new JSONObject();
+        object.put("title", title);
+       
+        
+        
+        this.response = given()
+                        .contentType(ContentType.JSON)
+                        .body(object.toJSONString())
+                        .when()
+                        .put("http://localhost:4567/projects/"+this.id);
+    }
 
+    @Then("the response body should contain the updated project item with title {string} and description {string} and completed {string}")
+    public void the_response_body_should_contain_the_updated_project_item_with_title_and_description_and_completed(String title, String description, String completed) {
+    	JsonPath jsonResponse = response.jsonPath();
+        assertEquals(title, jsonResponse.get("title"));
+        assertEquals(Boolean.parseBoolean(completed), Boolean.parseBoolean(jsonResponse.get("completed").toString()));
+        assertEquals(description, jsonResponse.get("description"));
+    }
+
+    @When("a request is sent to update a project item with id {string}")
+    public void a_request_is_sent_to_update_a_project_item_with_id(String id) {
+    	this.response = given()
+                .contentType(ContentType.JSON)
+                .when()
+                .put("http://localhost:4567/projects/"+this.id);
+    }
+    
+    
+	
+	
 	
 	
 
 
+    
 }
