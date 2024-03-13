@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.Request;
 import org.junit.runner.RunWith;
 
@@ -25,6 +27,43 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 
 public class CucumberStepDefinition {
+	
+	private static boolean available;
+
+    @BeforeAll
+    public static void checkApiAvailability() {
+        try {
+            int statusCode = given()
+                                .when()
+                                .get("http://localhost:4567/")
+                                .then()
+                                .extract()
+                                .statusCode();
+
+            available = (statusCode == 200);
+        } catch (Exception e) {
+            fail(e.getMessage());
+            available = false;
+        }
+    }
+    
+    @AfterAll
+    public static void checkApiShutdown() {
+        try {
+            // Send a request to the shutdown endpoint
+            int statusCode = given()
+                                .when()
+                                .post("http://localhost:4567/shutdown")
+                                .then()
+                                .extract()
+                                .statusCode();
+            
+            // Assert that the API is not responding with a 200 status code, 
+            // indicating it's not available after shutdown
+            assertNotEquals(200, statusCode);
+        } catch (Exception e) {
+        }
+    }
 	
 	
 	// =========================== Feature : Create a new todo item ===========================
@@ -39,6 +78,24 @@ public class CucumberStepDefinition {
     private String completed;
  
 	
+    @Given("a todo exists with title {string}")
+    public void a_todo_exists_with_title(String title) {
+    	this.title = title;
+       
+        
+        
+        JSONObject object = new JSONObject();
+        object.put("title", title);
+   
+        this.response = given()
+                        .contentType(ContentType.JSON)
+                        .body(object.toJSONString())
+                        .when()
+                        .post("http://localhost:4567/todos");
+        JsonPath jsonResponse = response.jsonPath();
+        this.id = jsonResponse.get("id");
+    }
+    
 	// BUG FOUND : WHEN CREATING A TODO ITEM, ADDING A DONESTATUS RESULTS IN 400 ERROR 
 	@When("a request is sent to create a new todo item with title {string} and description {string}")
 	public void a_request_is_sent_to_create_a_new_todo_item_with_title_and_description(String title, String description) {
@@ -956,7 +1013,7 @@ public class CucumberStepDefinition {
                         .contentType(ContentType.JSON)
                         .body(object.toJSONString())
                         .when()
-                        .post("http://localhost:4567/todos");
+                        .post("http://localhost:4567/projects");
         JsonPath jsonResponse = response.jsonPath();
         this.id = jsonResponse.get("id");
     }
@@ -1016,6 +1073,7 @@ public class CucumberStepDefinition {
                 .when()
                 .put("http://localhost:4567/projects/"+this.id);
     }
+    
     
     
 	
