@@ -16,6 +16,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.runner.Request;
 import org.junit.runner.RunWith;
 
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -610,6 +611,214 @@ public class CucumberStepDefinition {
 			assertTrue(containsTitle);
 		}
 	}
+	
+
+
+	@When("a request is sent to create a new category with title {string}")
+	public void aRequestIsSentToCreateANewCategoryWithTitle(String title) {
+		this.title=title;
+		JSONObject requestBody = new JSONObject();
+		requestBody.put("title", title);
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.body(requestBody.toString())
+				.when()
+				.post("http://localhost:4567/categories");
+	}
+
+	@And("the response body should contain a category with title {string}")
+	public void theResponseBodyShouldContainACategoryWithTitle(String title) {
+		JsonPath jsonResponse = response.jsonPath();
+		assertEquals(title,jsonResponse.get("title"));
+	}
+
+	@When("a request is sent to create a new category with title {string} and description {string}")
+	public void aRequestIsSentToCreateANewCategoryWithTitleDescription(String title, String description) {
+		this.title=title;
+		JSONObject requestBody = new JSONObject();
+		requestBody.put("title", title);
+		requestBody.put("description", description);
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.body(requestBody.toString())
+				.when()
+				.post("http://localhost:4567/categories");
+	}
+
+	@And("the response body should contain a category with title {string} and description {string}")
+	public void theResponseBodyShouldContainACategoryWithTitleDescription(String title, String description) {
+		JsonPath jsonResponse = response.jsonPath();
+		assertEquals(title,jsonResponse.get("title"));
+		assertEquals(description,jsonResponse.get("description"));
+	}
+
+	@When("a request is sent to create a new category  with a missing title")
+	public void aRequestIsSentToCreateANewCategoryWithAMissingTitle() {
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.when()
+				.post("http://localhost:4567/categories");
+	}
+
+
+	@When("a request is sent to update the field of the category to title {string}")
+	public void aRequestIsSentToUpdateTheFieldOfTheCategoryToTitle(String title) {
+		this.title=title;
+		JSONObject requestBody = new JSONObject();
+		requestBody.put("title", title);
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.body(requestBody.toString())
+				.when()
+				.post("http://localhost:4567/categories/"+this.categoryId);
+	}
+
+	@When("a request is sent to update the field of the category to title {string} and description {string}")
+	public void aRequestIsSentToUpdateTheFieldOfTheCategoryToTitleAndDescription(String title, String description) {
+		this.title=title;
+		this.description=description;
+		JSONObject requestBody = new JSONObject();
+		requestBody.put("title", title);
+		requestBody.put("description", description);
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.body(requestBody.toString())
+				.when()
+				.post("http://localhost:4567/categories/"+this.categoryId);
+	}
+
+
+	@When("a request is sent to update the title of a category with id {string} to title {string}")
+	public void aRequestIsSentToUpdateTheTitleOfACategoryWithIdToTitle(String id, String title) {
+		this.categoryId=id;
+		this.title=title;
+		JSONObject requestBody = new JSONObject();
+		requestBody.put("title", title);
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.body(requestBody.toString())
+				.when()
+				.post("http://localhost:4567/categories/"+this.categoryId);
+	}
+
+	@When("a request is sent to delete this category")
+	public void aRequestIsSentToDeleteThisCategory() {
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.when()
+				.delete("http://localhost:4567/categories/"+this.categoryId);
+	}
+
+	@When("a request is sent to delete a category with id {string}")
+	public void aRequestIsSentToDeleteACategoryWithId(String id) {
+		this.categoryId=id;
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.when()
+				.delete("http://localhost:4567/categories/"+this.categoryId);
+
+	}
+
+	@Given("the todo item with title {string} is associated with the category")
+	public void theTodoItemWithTitleIsAssociatedWithTheCategory(String title) {
+		JSONObject requestBody = new JSONObject();
+		requestBody.put("title", title);
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.body(requestBody.toString())
+				.when()
+				.post("http://localhost:4567/categories/"+this.categoryId+"/todos");
+	}
+
+	@When("a request is sent to get the todos associated with the category")
+	public void aRequestIsSentToGetTheTodosAssociatedWithTheCategory() {
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.when()
+				.get("http://localhost:4567/categories/"+this.categoryId+"/todos");
+	}
+
+	@When("a request is sent to get the todos with title{string} associated with the category")
+	public void aRequestIsSentToGetTheTodosWithTitleAssociatedWithTheCategory(String title) {
+
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.when()
+				.get("http://localhost:4567/categories/"+this.categoryId+"/todos"+this.id);
+	}
+
+	//Bugs found:
+	@And("the response body should contain a todo item with title {string}")
+	public void theResponseBodyShouldContainATodoItemWithTitle(String title) {
+		JsonPath JsonResponse=this.response.jsonPath();
+		assertEquals(title,JsonResponse.get("title"));
+	}
+
+	@When("a request is sent to delete this category without specifying its id")
+	public void aRequestIsSentToDeleteThisCategoryWithoutSpecifyingItsId() {
+
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.when()
+				.delete("http://localhost:4567/categories/");
+	}
+
+	@And("the response body should contain an empty list of todo items")
+	public void theResponseBodyShouldContainAEmptyListOfTodoItems() {
+		assertNotNull(response);
+		int size = response.jsonPath().getList("todos").size();
+		assertEquals(0,size);
+	}
+
+	@Given("the category with title {string} is associated with the todo")
+	public void theCategoryWithTitleIsAssociatedWithTheTodo(String title) {
+		JSONObject requestBody = new JSONObject();
+		requestBody.put("title", title);
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.body(requestBody.toString())
+				.when()
+				.post("http://localhost:4567/todos/"+this.id+"/categories");
+		this.categoryId=response.jsonPath().get("id");
+	}
+
+	@When("a request is sent to delete the category with title {string} associated with the todo using the id")
+	public void aRequestIsSentToDeleteTheCategoryWithTitleAssociatedWithTheTodo(String title) {
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.when()
+				.delete("http://localhost:4567/todos/"+this.id+"/categories/"+this.categoryId);
+	}
+
+	@When("a request is sent to delete the category with title {string} associated with the todo using both the id and title")
+	public void aRequestIsSentToDeleteTheCategoryWithTitleAssociatedWithTheTodoUsingBothTheIdAndTitle(String title) {
+		JSONObject requestBody = new JSONObject();
+		requestBody.put("title", title);
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.body(requestBody.toString())
+				.when()
+				.delete("http://localhost:4567/todos/"+this.id+"/categories/"+this.categoryId);
+	}
+
+	@When("a request is sent to delete the category with title {string} associated with the todo without specifying the id")
+	public void aRequestIsSentToDeleteTheCategoryWithTitleAssociatedWithTheTodoWithoutSpecifyingTheId(String title) {
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.when()
+				.delete("http://localhost:4567/todos/"+this.id+"/categories/");
+	}
+
+	@When("a request is sent to get the todos with title{string} using a invalid category id {string}")
+	public void aRequestIsSentToGetTheTodosWithTitleUsingAInvalidCategoryId(String title, String id) {
+		this.categoryId=id;
+		this.response=given()
+				.contentType(ContentType.JSON)
+				.when()
+				.get("http://localhost:4567/todos/"+this.id+"/categories/"+this.categoryId);
+	}
+	
+	
 
 
 }
