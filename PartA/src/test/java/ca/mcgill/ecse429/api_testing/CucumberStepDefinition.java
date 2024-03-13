@@ -819,7 +819,7 @@ public class CucumberStepDefinition {
 	}
 	
 	
-	// =========================== Project Feature 1: Create a Project by Specifying Name ===========================
+	// =========================== Project Feature 1: Get project ===========================
 
 	@When("a request is sent to get all projects")
 	public void a_request_is_sent_to_get_all_projects() {
@@ -852,6 +852,70 @@ public class CucumberStepDefinition {
 	    assertEquals(title,titleObject);
 	    assertEquals(description, descObject);
 	    assertEquals(Boolean.parseBoolean(doneStatus), Boolean.parseBoolean((String) jsonResponse.get("todos[0].doneStatus")));
+	}
+	
+	// =========================== Project Feature 2: Create a Project by Specifying Name ===========================
+	
+	// BUG FOUND: CREATING A PROJECT AND SPECIFYING ITS DESCRIPTION RESULTS IN A NULL OBJECT
+	@When("a request is sent to create a new project item with title {string} and description {string}")
+	public void a_request_is_sent_to_create_a_new_project_item_with_title_and_description(String title, String description) {
+		this.title = title;
+        this.description = description;
+        
+        
+        JSONObject object = new JSONObject();
+        object.put("title", title);
+        object.put("description", description);
+        
+        this.response = given()
+                        .contentType(ContentType.JSON)
+                        .body(object.toJSONString())
+                        .when()
+                        .post("http://localhost:4567/projects");
+	}
+
+	@Then("the response body should contain a project item with title {string} and description {string}")
+	public void the_response_body_should_contain_a_project_item_with_title_and_description(String title, String description) {
+		JsonPath jsonResponse = response.jsonPath();
+        assertEquals(title, jsonResponse.get("title"));
+        assertEquals(description, jsonResponse.get("description"));
+	}
+
+	@When("a request is sent to create a new project item with title {string}")
+	public void a_request_is_sent_to_create_a_new_project_item_with_title(String title) {
+		this.title = title;
+        
+        JSONObject object = new JSONObject();
+        object.put("title", title);
+        
+        this.response = given()
+                        .contentType(ContentType.JSON)
+                        .body(object.toJSONString())
+                        .when()
+                        .post("http://localhost:4567/projects");
+	}
+	
+	@Then("the response body should contain a project item with title {string} and description {string} and completed {string}")
+	public void the_response_body_should_contain_a_project_item_with_title_and_description_and_completed(String title, String description, String completed) {
+		JsonPath jsonResponse = response.jsonPath();
+        assertEquals(title, jsonResponse.get("title"));
+        assertEquals(Boolean.parseBoolean(completed), Boolean.parseBoolean(jsonResponse.get("completed").toString()));
+        assertEquals(description, jsonResponse.get("description"));
+	}
+
+	@When("a request is sent to create a new project item with a missing title")
+	public void a_request_is_sent_to_create_a_new_project_item_with_a_missing_title() {
+		
+		String description = "";
+		
+		JSONObject object = new JSONObject();
+		object.put("description", description);
+		
+		this.response = given()
+							.contentType(ContentType.JSON)
+							.body(object.toJSONString())
+							.when()
+							.post("http://localhost:4567/todos");
 	}
     
 
