@@ -22,6 +22,76 @@ import io.restassured.response.Response;
 
 public class CucumberStepDefinition {
 	
+    private Response res;
+    private String currentActiveStatus;
+    private String newActiveStatus;
+    private String resultingActiveStatus;
+    private String nonExistentId;
+    private int statusCode;
+
+    // Normal Flow
+    @Given("a project with active status A {string}")
+    public void givenProjectWithActiveStatusA(String currentActiveStatus) {
+        this.currentActiveStatus = currentActiveStatus;
+    }
+
+    @When("I update the project active status A to {string}")
+    public void whenUpdateProjectActiveStatusA(String newActiveStatus) {
+        this.newActiveStatus = newActiveStatus;
+
+        JSONObject object = new JSONObject();
+        object.put("current_active_status", currentActiveStatus);
+        object.put("new_active_status", newActiveStatus);
+
+        this.response = given()
+                .contentType(ContentType.JSON)
+                .body(object.toJSONString())
+                .when()
+                .put("http://localhost:4567/updateProjectStatus"+this.id);
+    }
+
+    @Then("the project has active status A {string}")
+    public void thenProjectHasActiveStatusA(String resultingActiveStatus) {
+        this.resultingActiveStatus = resultingActiveStatus;
+        assertEquals(resultingActiveStatus, response.jsonPath().getString("resulting_active_status"));
+    }
+
+    // Alternate Flow
+    @Given("a project with active status E {string}")
+    public void givenProjectWithActiveStatusE(String currentActiveStatus) {
+        this.currentActiveStatus = currentActiveStatus;
+    }
+
+
+    // Error Flow
+    @Given("a project with active status F {string}")
+    public void givenProjectWithActiveStatusF(String currentActiveStatus) {
+        this.currentActiveStatus = currentActiveStatus;
+    }
+
+    @When("I update the project F {string} with active status {string}")
+    public void whenUpdateProjectFWithActiveStatus(String nonExistentId, String newActiveStatus) {
+        this.nonExistentId = nonExistentId;
+        this.newActiveStatus = newActiveStatus;
+
+        JSONObject object = new JSONObject();
+        object.put("current_active_status", currentActiveStatus);
+        object.put("non_existent_id", nonExistentId);
+        object.put("new_active_status", newActiveStatus);
+
+        this.response = given()
+                .contentType(ContentType.JSON)
+                .body(object.toJSONString())
+                .when()
+                .put("http://localhost:4567/updateProjectStatus"+this.id);
+    }
+
+    @Then("the returned status code for the project is equal to {int}")
+    public void thenReturnedStatusCodeIsEqualTo(int expectedStatusCode) {
+        this.statusCode = expectedStatusCode;
+        assertEquals(statusCode, response.getStatusCode());
+    }
+
 	
 	// =========================== Feature : Create a new todo item ===========================
 	private Response response; // Instance variable to hold the response
