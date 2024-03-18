@@ -9,8 +9,7 @@
   <version>1.0-SNAPSHOT</version>
 
   <name>api-testing</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+ 
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,11 +18,11 @@
   </properties>
 
   <dependencies>
-    <!-- JUnit Jupiter (JUnit 5) API for writing tests -->
+
     <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-api</artifactId>
-        <version>5.7.0</version> <!-- Use the version you prefer -->
+        <version>5.7.0</version> 
         <scope>test</scope>
     </dependency>
     <dependency>
@@ -39,7 +38,7 @@
         <scope>test</scope>
     </dependency>
 
-    <!-- JUnit Jupiter Engine for running the tests -->
+  
     <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-engine</artifactId>
@@ -47,11 +46,11 @@
         <scope>test</scope>
     </dependency>
 
-    <!-- JUnit Platform Launcher for launching the tests -->
+ 
     <dependency>
         <groupId>org.junit.platform</groupId>
         <artifactId>junit-platform-launcher</artifactId>
-        <version>1.7.0</version> <!-- This version should be compatible with the JUnit Jupiter version -->
+        <version>1.7.0</version>
         <scope>test</scope>
     </dependency>
     <dependency>
@@ -71,12 +70,12 @@
 
   <build>
       <plugins>
-        <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
+     
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
           <version>3.1.0</version>
         </plugin>
-        <!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+       
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
           <version>3.0.2</version>
